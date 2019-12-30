@@ -13,7 +13,7 @@ namespace TRADDataMonitor.SensorTypes
         private double lastVoltage;
         private bool insertRecord = true;
 
-        public MyOxygenSensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, minThreshold, maxThreshold, wireless)
+        public MyOxygenSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
             device = new VoltageInput();
             device.HubPort = hubPort;
@@ -40,17 +40,17 @@ namespace TRADDataMonitor.SensorTypes
         {
             lastVoltage = e.Voltage;
             lastTimestamp = DateTime.Now;
-            LiveData = lastVoltage.ToString() + " V";
+            LiveData = lastVoltage.ToString();
 
             if (lastVoltage < minThreshold)
             {
                 // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage);
             }
             if (lastVoltage > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage);
             }
         }
 
@@ -58,7 +58,7 @@ namespace TRADDataMonitor.SensorTypes
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Oyxgen Voltage";
+            ret[1] = "Oyxgen Voltage (V)";
             ret[2] = LiveData;
             return ret;
         }

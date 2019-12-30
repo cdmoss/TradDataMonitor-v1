@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cheze\\Desktop\\Trad-Worm-Farm-Monitoring-System\\TRAD Data Monitor\\TRADDataMonitor.csproj": {}
+    "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cheze\\Desktop\\Trad-Worm-Farm-Monitoring-System\\TRAD Data Monitor\\TRADDataMonitor.csproj": {
+    "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cheze\\Desktop\\Trad-Worm-Farm-Monitoring-System\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectUniqueName": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
         "projectName": "TRADDataMonitor",
-        "projectPath": "C:\\Users\\cheze\\Desktop\\Trad-Worm-Farm-Monitoring-System\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectPath": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
         "packagesPath": "C:\\Users\\cheze\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cheze\\Desktop\\Trad-Worm-Farm-Monitoring-System\\TRAD Data Monitor\\obj\\",
+        "outputPath": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -48,6 +48,18 @@
             "Avalonia.Desktop": {
               "target": "Package",
               "version": "[0.9.1, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.17, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[2.4.1, )"
             },
             "Phidget22.NET": {
               "target": "Package",

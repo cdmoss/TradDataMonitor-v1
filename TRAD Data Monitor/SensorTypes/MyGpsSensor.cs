@@ -49,7 +49,7 @@ namespace TRADDataMonitor.SensorTypes
             if (distanceFromInitialLocation > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                //thresholdBroken?.Invoke(0, maxThreshold, hubPort);
             }         
         }
 

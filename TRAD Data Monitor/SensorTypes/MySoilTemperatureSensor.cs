@@ -9,11 +9,12 @@ namespace TRADDataMonitor.SensorTypes
     public class MySoilTemperatureSensor : PhidgetSensor
     {
         TemperatureSensor device;
-        public DateTime lastTimestamp;
-        public double lastSoilTemperature;
+        DateTime lastTimestamp;
+        double lastSoilTemperature;
         public bool insertRecord = false;
 
-        public MySoilTemperatureSensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, minThreshold, maxThreshold, wireless)
+
+        public MySoilTemperatureSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
             device = new TemperatureSensor();
             device.HubPort = hubPort;
@@ -40,17 +41,17 @@ namespace TRADDataMonitor.SensorTypes
         {
             lastSoilTemperature = e.Temperature;
             lastTimestamp = DateTime.Now;
-            LiveData = lastSoilTemperature.ToString() + " °C";
+            LiveData = lastSoilTemperature.ToString();
 
             if (lastSoilTemperature < minThreshold)
             {
                 // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature);
             }
             else if (lastSoilTemperature > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature);
             }
         }
 
@@ -58,7 +59,7 @@ namespace TRADDataMonitor.SensorTypes
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Temperature";
+            ret[1] = "Temperature (°C)";
             ret[2] = LiveData;
             return ret;
         }

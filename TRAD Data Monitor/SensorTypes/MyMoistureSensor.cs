@@ -12,7 +12,7 @@ namespace TRADDataMonitor.SensorTypes
         public DateTime lastTimestamp;
         private double lastVoltage = -1;
 
-        public MyMoistureSensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, minThreshold, maxThreshold, wireless)
+        public MyMoistureSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
             device = new VoltageInput();
             device.HubPort = hubPort;
@@ -43,11 +43,11 @@ namespace TRADDataMonitor.SensorTypes
 
             if(lastVoltage < minThreshold)
             {
-
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage);
             }
             else if(lastVoltage > maxThreshold)
             {
-
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage);
             }
         }
 
@@ -55,7 +55,7 @@ namespace TRADDataMonitor.SensorTypes
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Moisture Voltage";
+            ret[1] = "Moisture Voltage (V)";
             ret[2] = LiveData;
             return ret;
         }

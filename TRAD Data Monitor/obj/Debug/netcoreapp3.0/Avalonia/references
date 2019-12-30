@@ -24,11 +24,15 @@ C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Themes.
 C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Visuals.dll
 C:\Users\cheze\.nuget\packages\avalonia.win32\0.9.1\lib\netstandard2.0\Avalonia.Win32.dll
 C:\Users\cheze\.nuget\packages\avalonia.x11\0.9.1\lib\netstandard2.0\Avalonia.X11.dll
+C:\Users\cheze\.nuget\packages\portable.bouncycastle\1.8.5\lib\netstandard2.0\BouncyCastle.Crypto.dll
+C:\Users\cheze\.nuget\packages\htmlagilitypack\1.11.17\lib\netstandard2.0\HtmlAgilityPack.dll
 C:\Users\cheze\.nuget\packages\jetbrains.annotations\10.3.0\lib\netstandard1.0\JetBrains.Annotations.dll
+C:\Users\cheze\.nuget\packages\mailkit\2.4.1\lib\netstandard2.0\MailKit.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.CSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.VisualBasic.Core.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.VisualBasic.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.Win32.Primitives.dll
+C:\Users\cheze\.nuget\packages\mimekit\2.4.1\lib\netstandard2.0\MimeKit.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\mscorlib.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\netstandard.dll
 C:\Users\cheze\.nuget\packages\phidget22.net\1.5.20191113\lib\netcoreapp2.0\Phidget22.NET.dll
@@ -190,5 +194,6 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XmlSerializer.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XPath.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XPath.XDocument.dll
+C:\Users\cheze\.nuget\packages\system.xml.xpath.xmldocument\4.3.0\ref\netstandard1.3\System.Xml.XPath.XmlDocument.dll
 C:\Users\cheze\.nuget\packages\tmds.dbus\0.7.0\lib\netstandard2.0\Tmds.DBus.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\WindowsBase.dll

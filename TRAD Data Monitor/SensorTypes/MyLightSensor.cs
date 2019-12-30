@@ -12,7 +12,7 @@ namespace TRADDataMonitor.SensorTypes
         public DateTime lastTimestamp;
         private double lastIlluminance = -1;
 
-        public MyLightSensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, minThreshold, maxThreshold, wireless)
+        public MyLightSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
             device = new LightSensor();
             device.HubPort = hubPort;
@@ -39,17 +39,17 @@ namespace TRADDataMonitor.SensorTypes
         {
             lastIlluminance = e.Illuminance;
             lastTimestamp = DateTime.Now;
-            LiveData = lastIlluminance.ToString() + " lx";
+            LiveData = lastIlluminance.ToString();
 
             if (lastIlluminance < minThreshold)
             {
                 // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance);
             }
             if (lastIlluminance > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance);
             }
         }
 
@@ -57,9 +57,11 @@ namespace TRADDataMonitor.SensorTypes
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Light";
+            ret[1] = "Light (lx)";
             ret[2] = LiveData;
             return ret;
         }
+
+
     }
 }

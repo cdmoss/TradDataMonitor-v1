@@ -12,6 +12,8 @@ using TRADDataMonitor.SensorTypes;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Timers;
+using MimeKit;
+using MailKit;
 
 namespace TRADDataMonitor
 {
@@ -27,7 +29,6 @@ namespace TRADDataMonitor
         // port assignment for current vint hub
         string _hubPort0, _hubPort1, _hubPort2, _hubPort3, _hubPort4, _hubPort5;
 
-        string _selectedHubID, _selectedHubWireless; 
         double _minSoilTemperature, _minAirTemperature, _minHumidity, _minMoisture, _minOxygen, _minVOC;
         double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC;
         string _recepientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort, _dataCollectionIntervalTime;
@@ -37,8 +38,9 @@ namespace TRADDataMonitor
 
         // data collection variables
         MyGpsSensor _gps;
+        AirQualitySensor _aqs;
         Timer _dataCollectionTimer;
-        ObservableCollection<VintHub> _savedVintHubs;
+        ItemsChangeObservableCollection<VintHub> _savedVintHubs;
         VintHub _selectedSessionHub;
         string _dataCollectionStatus = "Disabled: No data is being collected";
         bool _gpsInitialDataStored;
@@ -72,7 +74,7 @@ namespace TRADDataMonitor
             set
             {
                 _hubPort0 = value;
-                SelectedConfigHub.Sensor0 = _data.CreateSensor(value, 0, SelectedConfigHub.Wireless);
+                SelectedConfigHub.Sensor0 = _data.CreateSensor(value, 0, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                 OnPropertyChanged();
             }
         }
@@ -85,7 +87,7 @@ namespace TRADDataMonitor
                 if (value != _hubPort1)
                 {
                     _hubPort1 = value;
-                    SelectedConfigHub.Sensor1 = _data.CreateSensor(value, 1, SelectedConfigHub.Wireless);
+                    SelectedConfigHub.Sensor1 = _data.CreateSensor(value, 1, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                     OnPropertyChanged();
                 }
             }
@@ -99,7 +101,7 @@ namespace TRADDataMonitor
                 if (value != _hubPort2)
                 {
                     _hubPort2 = value;
-                    SelectedConfigHub.Sensor2 = _data.CreateSensor(value, 2, SelectedConfigHub.Wireless);
+                    SelectedConfigHub.Sensor2 = _data.CreateSensor(value, 2, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                     OnPropertyChanged();
                 }
             }
@@ -113,7 +115,7 @@ namespace TRADDataMonitor
                 if (value != _hubPort3)
                 {
                     _hubPort3 = value;
-                    SelectedConfigHub.Sensor3 = _data.CreateSensor(value, 3, SelectedConfigHub.Wireless);
+                    SelectedConfigHub.Sensor3 = _data.CreateSensor(value, 3, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                     OnPropertyChanged();
                 }
             }
@@ -127,7 +129,7 @@ namespace TRADDataMonitor
                 if (value != _hubPort4)
                 {
                     _hubPort4 = value;
-                    SelectedConfigHub.Sensor4 = _data.CreateSensor(value, 4, SelectedConfigHub.Wireless);
+                    SelectedConfigHub.Sensor4 = _data.CreateSensor(value, 4, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                     OnPropertyChanged();
                 }
             }
@@ -140,7 +142,7 @@ namespace TRADDataMonitor
                 if (value != _hubPort5)
                 {
                     _hubPort5 = value;
-                    SelectedConfigHub.Sensor5 = _data.CreateSensor(value, 5, SelectedConfigHub.Wireless);
+                    SelectedConfigHub.Sensor5 = _data.CreateSensor(value, 5, SelectedConfigHub.HubName, SelectedConfigHub.Wireless);
                     OnPropertyChanged();
                 }
             }
@@ -152,7 +154,7 @@ namespace TRADDataMonitor
             set 
             { 
                 _unsavedVintHubs = value;
-                OnPropertyChanged();
+                UnsavedVintHubs.Refresh();
             }
         }
 
@@ -403,13 +405,13 @@ namespace TRADDataMonitor
         #endregion
         #region current session info
 
-        public ObservableCollection<VintHub> SavedVintHubs
+        public ItemsChangeObservableCollection<VintHub> SavedVintHubs
         {
             get { return _savedVintHubs; }
             set 
             {
                 _savedVintHubs = value;
-                OnPropertyChanged();
+                _savedVintHubs.Refresh();
             }
         }
 
@@ -433,6 +435,19 @@ namespace TRADDataMonitor
                 if (value != _dataCollectionStatus)
                 {
                     _dataCollectionStatus = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public AirQualitySensor AQS
+        {
+            get { return _aqs; }
+            set
+            {
+                if (value != _aqs)
+                {
+                    _aqs = value;
                     OnPropertyChanged();
                 }
             }
@@ -623,11 +638,7 @@ namespace TRADDataMonitor
 
                 // load saved vint hubs
                 SavedVintHubs = _data.VintHubs;
-
-                foreach (var sensor in _data.VintHubs)
-                {
-                    UnsavedVintHubs.Add(sensor);
-                }
+                UnsavedVintHubs = SavedVintHubs;
 
                 SelectedConfigHub = UnsavedVintHubs[0];
                 HubPort0 = SelectedConfigHub.Sensor0.SensorType;
@@ -650,12 +661,12 @@ namespace TRADDataMonitor
                 SelectedConfigHub = newHub;
 
                 // set hubports to default
-                HubPort0 = _sensorTypes[6];
-                HubPort1 = _sensorTypes[6];
-                HubPort2 = _sensorTypes[6];
-                HubPort3 = _sensorTypes[6];
-                HubPort4 = _sensorTypes[6];
-                HubPort5 = _sensorTypes[6];
+                HubPort0 = _sensorTypes[5];
+                HubPort1 = _sensorTypes[5];
+                HubPort2 = _sensorTypes[5];
+                HubPort3 = _sensorTypes[5];
+                HubPort4 = _sensorTypes[5];
+                HubPort5 = _sensorTypes[5];
 
                 
 
@@ -679,19 +690,36 @@ namespace TRADDataMonitor
             SelectedConfigHub = UnsavedVintHubs[0];
         }
         // method that sends an email
-        void SendEmailAlert()
+        public void SendEmailAlert(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, bool test)
         {
+            string subject;
+            string message;
+
+            if(test)
+            {
+                subject = "TEST ALERT";
+                message = $"ALERT: This is a test alert. If you are recieving this then the email alert system is configured correctly";
+            }
+            else
+            {
+                subject = "THRESHOLD BROKEN ALERT";
+                message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
+            }
             SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
             NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
 
             System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
             smtp01.Credentials = netCred;
             smtp01.EnableSsl = true;
-            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, "TEST Alert", "This is a test alert");
+            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
             smtp01.Send(msg);
         }
 
-        
+        public void SendTestEmailAlert()
+        {
+            SendEmailAlert(-1, -1, "testHub", "testSesnor", -1, -1, true);
+        }
+
 
         public void StartDataCollection()
         {
@@ -701,9 +729,11 @@ namespace TRADDataMonitor
             _dataCollectionTimer.Elapsed += Tmr_Elapsed;
 
             // builds gps sensor if needed
-            // TODO: add threshold value
+            // TODO: add threshold value to GPS creation in startdatacollection method
             if(GpsEnabled)
                 _gps = new MyGpsSensor(-1, "GPS", -1);
+
+            AQS = new AirQualitySensor(_data.DataCollectionIntervalTime);
 
             // open connections for all connected sensors
             foreach (var hub in _savedVintHubs)
@@ -751,6 +781,12 @@ namespace TRADDataMonitor
                 _gpsInitialDataStored = true;
             }
 
+            // store data from VOC
+            string[] voc = _aqs.ProduceVOCData();
+            string[] co2 = _aqs.ProduceCO2Data();
+            _data.InsertData(voc[0], voc[1], voc[2]);
+            _data.InsertData(co2[0], co2[1], co2[2]);
+
             // store data from all sensors
             foreach (VintHub vintHub in _savedVintHubs)
             {
@@ -758,8 +794,20 @@ namespace TRADDataMonitor
                 {
                     if (sensor.SensorType != "None")
                     {
-                        string[] tmp = sensor.ProduceData();
-                        _data.InsertData(tmp[0], tmp[1], tmp[2]);
+                        if (sensor.SensorType == "Humidity")
+                        {
+                            MyHumidityAirTemperatureSensor humiditySensor = (MyHumidityAirTemperatureSensor)sensor;
+                            string[] humidity = humiditySensor.ProduceHumidityData();
+                            string[] temp = humiditySensor.ProduceAirTemperatureData();
+
+                            _data.InsertData(humidity[0], humidity[1], humidity[2]);
+                            _data.InsertData(temp[0], temp[1], temp[2]);
+                        }
+                        else
+                        {
+                            string[] tmp = sensor.ProduceData();
+                            _data.InsertData(tmp[0], tmp[1], tmp[2]);
+                        }
                     }
                 }
             }

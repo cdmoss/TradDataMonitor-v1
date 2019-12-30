@@ -64,7 +64,7 @@
             <TextBlock Text="Save Configuration" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold" />
           </Button.Content>
         </Button>
-        <Button Name="btnTestEmailNotifications" Command="{Binding $parent[Window].DataContext.SendEmail}" Grid.Column="1" Grid.Row="2">
+        <Button Name="btnTestEmailNotifications" Command="{Binding $parent[Window].DataContext.SendTestEmailAlert}" Grid.Column="1" Grid.Row="2">
           <Button.Content>
             <TextBlock Text="Test Email Alert" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
           </Button.Content>
@@ -99,24 +99,27 @@
           <RowDefinition Height="1*"/>
           <RowDefinition Height="1*"/>
           <RowDefinition Height="1*"/>
+			<RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 		<TextBlock Text="Sensor Configuration" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 10"/>
 		<TextBlock Text="Data Collection Frequency (ms)" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
 		<TextBox Name="txtDataCollectionIntervalTime" Text="{Binding DataCollectionIntervalTime, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
-		<TextBlock Text="Port 0" Grid.Row="2" Grid.Column="0" />
-		<TextBlock Text="Port 1" Grid.Row="3" Grid.Column="0" />
-		<TextBlock Text="Port 2" Grid.Row="4" Grid.Column="0" />
-		<TextBlock Text="Port 3" Grid.Row="5" Grid.Column="0" />
-		<TextBlock Text="Port 4" Grid.Row="6" Grid.Column="0" />
-		<TextBlock Text="Port 5" Grid.Row="7" Grid.Column="0" />
-		<TextBlock Text="Wireless" Grid.Row="8" Grid.Column="0" />
-		<DropDown Name="cmbHubPort0" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort0, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort1" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort1, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort2" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort2, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort3" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort3, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort4" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort4, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort5" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort5, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" Margin="2"/>
-	    <CheckBox IsChecked="{Binding SelectedConfigHub.Wireless}" Grid.Column="1" Grid.Row="8"/>
+		<TextBlock Text="Hub Name" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBox Text="{Binding SelectedConfigHub.HubName, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Margin="2"/>
+		<TextBlock Text="Port 0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Port 1" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Port 2" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Port 3" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Port 4" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Port 5" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+		<TextBlock Text="Wireless" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+		<DropDown Name="cmbHubPort0" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort0, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Margin="2"/>
+		<ComboBox Name="cmbHubPort1" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort1, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="2"/>
+		<ComboBox Name="cmbHubPort2" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort2, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Margin="2"/>
+		<ComboBox Name="cmbHubPort3" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort3, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" Margin="2"/>
+		<ComboBox Name="cmbHubPort4" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort4, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" Margin="2"/>
+		<ComboBox Name="cmbHubPort5" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort5, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Margin="2"/>
+	    <CheckBox IsChecked="{Binding SelectedConfigHub.Wireless}" Grid.Column="1" Grid.Row="9"/>
 		  <ListBox Items="{Binding UnsavedVintHubs}" SelectedItem="{Binding SelectedConfigHub}" Grid.Column="2" Grid.Row="1" Grid.RowSpan="6" Margin="10 2">
 			  <ListBox.ItemTemplate>
 				  <DataTemplate>
@@ -130,7 +133,7 @@
 							  <RowDefinition Height="auto"/>
 						  </Grid.RowDefinitions>
 						  <TextBlock Text="Hub ID: " Grid.Column="0"/>
-						  <TextBlock Text="{Binding IDString}" Grid.Column="1"/>
+						  <TextBlock Text="{Binding HubName}" Grid.Column="1"/>
 						  <TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
 						  <TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
 					  </Grid>
@@ -207,33 +210,39 @@
         <Grid.RowDefinitions>
           <RowDefinition Height="1*"/>
           <RowDefinition Height="1*"/>
-          <RowDefinition Height="10*"/>
-			<RowDefinition Height="4*"/>
+          <RowDefinition Height="1*"/>
+		  <RowDefinition Height="1*"/>
+		  <RowDefinition Height="10*"/>
+		  <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Current Monitoring Session Info" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 10"/>
         <TextBlock Text="Collection Status:" Grid.Column="0" Grid.Row="1"/>
         <TextBlock Text="{Binding DataCollectionStatus, Mode=TwoWay}" Grid.Column="1" Grid.Row="1"/>
-		  <ItemsControl Items="{Binding SelectedSessionHub.AllSensors}" Grid.Column="0" Grid.Row="2" Margin="0 0 0 10">
-			  <ItemsControl.ItemTemplate>
-				  <DataTemplate>
-					  <Grid>
-						  <Grid.ColumnDefinitions>
-							  <ColumnDefinition Width="1*"/>
-							  <ColumnDefinition Width="1*"/>
-						  </Grid.ColumnDefinitions>
-						  <Grid.RowDefinitions>
-							  <RowDefinition Height="auto"/>
-							  <RowDefinition Height="auto"/>
-						  </Grid.RowDefinitions>
-						  <TextBlock Text="Sensor Type" Grid.Column="0" Grid.Row="0"/>
-						  <TextBlock Text="Data" Grid.Column="1" Grid.Row="0"/>
-						  <TextBlock Text="Humidity" Grid.Column="0" Grid.Row="1"/>
-						  <TextBlock Text="22 %" Grid.Column="1" Grid.Row="1"/>
-					  </Grid>
-				  </DataTemplate>
-			  </ItemsControl.ItemTemplate>
-		  </ItemsControl>
-		<ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Grid.RowSpan="6" Margin="10 2">
+		<TextBlock Text="SensorType" Grid.Column="0" Grid.Row="2"/>
+		<TextBlock Text="Data" Grid.Column="1" Grid.Row="2"/>
+		<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="Air Quality Sensor:"/>
+			<TextBlock Text="{Binding AQS.LiveData}" Grid.Column="1"/>
+		</Grid>
+		<ItemsControl Items="{Binding SelectedSessionHub.AllSensors}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0 0 0 10">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding SensorType}" Grid.Column="0"/>
+						<TextBlock Text="{Binding LiveData}" Grid.Column="1"/>
+					</Grid>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		<ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Margin="10 2">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
@@ -246,7 +255,7 @@
 							<RowDefinition Height="auto"/>
 						</Grid.RowDefinitions>
 						<TextBlock Text="Hub ID: " Grid.Column="0"/>
-						<TextBlock Text="{Binding IDString}" Grid.Column="1"/>
+						<TextBlock Text="{Binding HubName}" Grid.Column="1"/>
 						<TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
 						<TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
 					</Grid>

@@ -12,7 +12,7 @@ namespace TRADDataMonitor
         PhidgetSensor _sensor0, _sensor1, _sensor2, _sensor3, _sensor4, _sensor5;
         ItemsChangeObservableCollection<PhidgetSensor> _allSensors;
         bool _wireless;
-        int _id;
+        string _hubName;
         string _wirelessString, _idString;
         #region sensor properties
         public PhidgetSensor Sensor0
@@ -80,16 +80,11 @@ namespace TRADDataMonitor
             get { return _allSensors; }
             set
             {
-                // clear current value then re-add all sensors
-                //_allSensors.Clear();
-                //for (int i = 0; i < 6; i++)
-                //{
-                //    PropertyInfo vintHub = typeof(VintHub).GetProperty($"Sensor{i}");
-                //    PhidgetSensor sensor = (PhidgetSensor)vintHub.GetValue(this, null);
-                //    _allSensors.Add(sensor);
-                //}
-                _allSensors = value;
-                OnPropertyChanged();
+                if (value != _allSensors)
+                {
+                    _allSensors = value;
+                    _allSensors.Refresh();
+                }
             }
         }
         #endregion
@@ -99,19 +94,12 @@ namespace TRADDataMonitor
             get { return _wireless; }
             set
             {
-                _wireless = value;
-                WirelessString = value.ToString();
-                OnPropertyChanged();
-            }
-        }
+                if (value)
+                    WirelessString = "Enabled";
+                else
+                    WirelessString = "Disabled";
 
-        public int ID
-        {
-            get { return _id; }
-            set
-            {
-                _id = value;
-                IDString = value.ToString();
+                _wireless = value;  
                 OnPropertyChanged();
             }
         }
@@ -126,17 +114,17 @@ namespace TRADDataMonitor
             }
         }
 
-        public string IDString
+        public string HubName
         {
-            get { return _idString; }
+            get { return _hubName; }
             set
             {
-                _idString = value;
+                _hubName = value;
                 OnPropertyChanged();
             }
         }
 
-        public VintHub(PhidgetSensor[] sensors, bool wireless, int ID)
+        public VintHub(PhidgetSensor[] sensors, bool wireless, string hubName)
         {
             try
             {
@@ -154,14 +142,14 @@ namespace TRADDataMonitor
 
                     Wireless = wireless;
 
-                    this.ID = ID;
+                    this.HubName = hubName;
                 }
                 else
                 {
                     throw new ArgumentException("Exactly 6 sensors are required to initiate a VINT Hub.");
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return;
             }

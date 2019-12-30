@@ -6,14 +6,14 @@ using Phidget22;
 
 namespace TRADDataMonitor.SensorTypes
 {
-    public class MyHumiditySensor : PhidgetSensor
+    public class MyHumidityAirTemperatureSensor : PhidgetSensor
     {
         HumiditySensor humidityDevice;
         TemperatureSensor temperatureDevice;
         private double lastHumidity = -1, lastAirTemperature = -1;
         public DateTime lastTimestamp;
 
-        public MyHumiditySensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, minThreshold, maxThreshold, wireless)
+        public MyHumidityAirTemperatureSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
             humidityDevice = new HumiditySensor();
             humidityDevice.HubPort = hubPort;
@@ -36,6 +36,7 @@ namespace TRADDataMonitor.SensorTypes
                 if (wirelessEnabled)
                     Net.EnableServerDiscovery(Phidget22.ServerType.DeviceRemote);
                 humidityDevice.Open(4000);
+                temperatureDevice.Open(4000);
             }
             catch (Exception ex)
             {
@@ -47,17 +48,17 @@ namespace TRADDataMonitor.SensorTypes
         {
             lastHumidity = e.Humidity;
             lastTimestamp = DateTime.Now;
-            LiveData = lastHumidity.ToString() + ", " + lastAirTemperature.ToString();
+            LiveData = lastHumidity.ToString() + " %, " + lastAirTemperature.ToString() + " °C";
 
             if (lastHumidity < minThreshold) 
             {
                 // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastHumidity);
             }     
             else if(lastHumidity > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastHumidity);
             }
         }
         private void TemperatureDevice_TemperatureChange(object sender, Phidget22.Events.TemperatureSensorTemperatureChangeEventArgs e)
@@ -69,20 +70,29 @@ namespace TRADDataMonitor.SensorTypes
             if (lastAirTemperature < minThreshold)
             {
                 // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastAirTemperature);
             }
             else if (lastAirTemperature > maxThreshold)
             {
                 // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke();
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastAirTemperature);
             }
         }
-        public override String[] ProduceData()
+        public string[] ProduceHumidityData()
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Humidity and Air Temperature";
-            ret[2] = LiveData;
+            ret[1] = "Humidity (%)";
+            ret[2] = lastHumidity.ToString();
+            return ret;
+        }
+
+        public string[] ProduceAirTemperatureData()
+        {
+            string[] ret = new string[3];
+            ret[0] = lastTimestamp.ToString();
+            ret[1] = "Air Temperature (°C)";
+            ret[2] = lastAirTemperature.ToString();
             return ret;
         }
     }

@@ -12,6 +12,7 @@ namespace TRADDataMonitor
         protected int hubPort = -1;
         protected double minThreshold = -1, maxThreshold = -1, secondMinThreshold = -1, secondMaxThreshold = -1;
         protected bool hubPortDevice = true, thresholdEnabled = false, wirelessEnabled;
+        protected string hubName;
         private string _sensorType, _liveData;
 
         public string SensorType
@@ -35,11 +36,11 @@ namespace TRADDataMonitor
         }
 
         // Delegate for email alert
-        public delegate void EmailAlertHandler();
+        public delegate void EmailAlertHandler(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val);
         public EmailAlertHandler thresholdBroken;
 
         // Constructor for both a minimum threshold value and a maximimum threshold value
-        public PhidgetSensor(int hubPort, string type, double minThreshold, double maxThreshold, bool wireless)
+        public PhidgetSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless)
         {
             //Assign the channel from phidget port
             this.hubPort = hubPort;
@@ -47,6 +48,7 @@ namespace TRADDataMonitor
             this.minThreshold = minThreshold;
             this.maxThreshold = maxThreshold;
             this.wirelessEnabled = wireless;
+            this.hubName = hubName;
         }
 
         // Constructor for 2 minimum threshold values and 2 maximimum threshold values

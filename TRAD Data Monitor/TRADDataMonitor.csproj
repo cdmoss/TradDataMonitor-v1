@@ -20,6 +20,9 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.1" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
+    <PackageReference Include="MailKit" Version="2.4.1" />
+    <PackageReference Include="MimeKit" Version="2.4.1" />
     <PackageReference Include="Phidget22.NET" Version="1.5.20191113" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
   </ItemGroup>
