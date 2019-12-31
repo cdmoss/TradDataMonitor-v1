@@ -47,8 +47,8 @@
 //#define CCS811_ADDR 0x5A //Alternate I2C Address
 
 //Wifi Network Credentials
-const char* ssid = "Phidgets_HUB5000_2AE166";
-const char* password = "EqupxTzK";
+const char* ssid = "FBI Surveilance";
+const char* password = "22Lonnie2018";
 
 CCS811 mySensor(CCS811_ADDR);
 ESP8266WebServer server(80);   //instantiate server at port 80 (http port)

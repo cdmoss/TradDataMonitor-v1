@@ -15,6 +15,7 @@ using System.Timers;
 using MimeKit;
 using MailKit;
 using Phidget22;
+using System.Diagnostics;
 
 namespace TRADDataMonitor
 {
@@ -31,7 +32,7 @@ namespace TRADDataMonitor
         string _hubPort0, _hubPort1, _hubPort2, _hubPort3, _hubPort4, _hubPort5;
 
         double _minSoilTemperature, _minAirTemperature, _minHumidity, _minMoisture, _minOxygen, _minVOC, _minCO2;
-        double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC, _maxCO2;
+        double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC, _maxCO2, _maxGpsDistance;
         string _recepientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort, _dataCollectionIntervalTime;
         bool _gpsEnabled = false;
         ItemsChangeObservableCollection<VintHub> _unsavedVintHubs;
@@ -44,7 +45,7 @@ namespace TRADDataMonitor
         ItemsChangeObservableCollection<VintHub> _savedVintHubs;
         VintHub _selectedSessionHub;
         string _dataCollectionStatus = "Disabled: No data is being collected";
-        bool _gpsInitialDataStored;
+        bool _gpsInitialDataStored, _isCollectingData = false;
 
         // for message boxes
         MainWindow _mainWindow;
@@ -156,6 +157,7 @@ namespace TRADDataMonitor
             { 
                 _unsavedVintHubs = value;
                 UnsavedVintHubs.Refresh();
+                OnPropertyChanged();
             }
         }
 
@@ -425,6 +427,15 @@ namespace TRADDataMonitor
             }
         }
 
+        public double MaxGpsDistance
+        {
+            get { return _maxGpsDistance; }
+            set
+            {
+                _maxGpsDistance = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
         #endregion
         #region current session info
@@ -528,106 +539,113 @@ namespace TRADDataMonitor
 
         void SaveConfiguration()
         {
-            #region input validation
-            int smtpPort;
-            int dataInterval;
-
-            // Checks if the recepient email is valid before saving
-            if (IsValidEmail(RecipientEmailAddress))
+            if (!_isCollectingData)
             {
-                _data.RecipientEmailAddress = RecipientEmailAddress;
-            }
-            else
-            {
-                MessageBox.Show(_mainWindow, "The recipient email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
-                return;
-            }
+                #region input validation
+                int smtpPort;
+                int dataInterval;
 
-            // Checks if the sender email is valid before saving
-            if (IsValidEmail(SenderEmailAddress))
-            {
-                SenderEmailAddress = SenderEmailAddress;
-            }
-            else
-            {
-                MessageBox.Show(_mainWindow, "The sender email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
-                return;
-            }
-
-            // Sets the sender email password
-            _data.SenderEmailPassword = SenderEmailPassword;
-
-            // Tries to convert the textbox string to an integer
-            try
-            {
-                smtpPort = Int32.Parse(SenderEmailSmtpPort);
-
-                // Checks if the SMTP address and port are valid
-                if (IsValidSmtp(SenderEmailSmtpAddress, smtpPort))
+                // Checks if the recepient email is valid before saving
+                if (IsValidEmail(RecipientEmailAddress))
                 {
-                    _data.SenderEmailSmtpAddress = SenderEmailSmtpAddress;
-                    _data.SenderEmailSmtpPort = smtpPort;
+                    _data.RecipientEmailAddress = RecipientEmailAddress;
                 }
                 else
                 {
-                    MessageBox.Show(_mainWindow, "The sender SMTP address and/or port are invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "The recipient email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
                     return;
                 }
+
+                // Checks if the sender email is valid before saving
+                if (IsValidEmail(SenderEmailAddress))
+                {
+                    SenderEmailAddress = SenderEmailAddress;
+                }
+                else
+                {
+                    MessageBox.Show(_mainWindow, "The sender email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    return;
+                }
+
+                // Sets the sender email password
+                _data.SenderEmailPassword = SenderEmailPassword;
+
+                // Tries to convert the textbox string to an integer
+                try
+                {
+                    smtpPort = Int32.Parse(SenderEmailSmtpPort);
+
+                    // Checks if the SMTP address and port are valid
+                    if (IsValidSmtp(SenderEmailSmtpAddress, smtpPort))
+                    {
+                        _data.SenderEmailSmtpAddress = SenderEmailSmtpAddress;
+                        _data.SenderEmailSmtpPort = smtpPort;
+                    }
+                    else
+                    {
+                        MessageBox.Show(_mainWindow, "The sender SMTP address and/or port are invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                        return;
+                    }
+                }
+                catch (Exception smtpPortError)
+                {
+                    MessageBox.Show(_mainWindow, smtpPortError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    return;
+                }
+
+                // Tries to convert the textbox string to an integer
+                try
+                {
+                    dataInterval = Int32.Parse(DataCollectionIntervalTime);
+
+                    // Sets the data collection timer interval
+                    _data.DataCollectionIntervalTime = dataInterval;
+                }
+                catch (Exception dataIntervalError)
+                {
+                    MessageBox.Show(_mainWindow, dataIntervalError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    return;
+                }
+                #endregion
+
+                // save vint hub configs
+                SavedVintHubs = UnsavedVintHubs;
+                _data.VintHubs = _savedVintHubs;
+
+                // save general config values
+                _data.MinSoilTemperature = _minSoilTemperature;
+                _data.MaxSoilTemperature = _maxSoilTemperature;
+                _data.MinAirTemperature = _minAirTemperature;
+                _data.MaxAirTemperature = _maxAirTemperature;
+                _data.MinHumidity = _minHumidity;
+                _data.MaxHumidity = _maxHumidity;
+                _data.MinMoisture = _minMoisture;
+                _data.MaxMoisture = _maxMoisture;
+                _data.MinOxygen = _minOxygen;
+                _data.MaxOxygen = _maxOxygen;
+                _data.MinVOC = _minVOC;
+                _data.MaxVOC = _maxVOC;
+                _data.RecipientEmailAddress = _recepientEmailAddress;
+                _data.SenderEmailAddress = _senderEmailAddress;
+                _data.SenderEmailPassword = _senderEmailPassword;
+                _data.SenderEmailSmtpAddress = _senderEmailSmtpAddress;
+                _data.SenderEmailSmtpPort = Convert.ToInt32(_senderEmailSmtpPort);
+                _data.DataCollectionIntervalTime = Convert.ToInt32(_dataCollectionIntervalTime);
+                _data.GpsEnabled = _gpsEnabled;
+
+                if (_data.SaveConfiguration() == "good" && _data.LoadConfiguration() == "good")
+                {
+                    LoadConfiguration();
+
+                    MessageBox.Show(_mainWindow, "Configuration was successfully saved and is now the current configuration.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+                }
+                else
+                    MessageBox.Show(_mainWindow, $"Configuration was not saved properly. Please ensure all fields contain valid input and try again", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
             }
-            catch (Exception smtpPortError)
-            {
-                MessageBox.Show(_mainWindow, smtpPortError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
-                return;
-            }
-
-            // Tries to convert the textbox string to an integer
-            try
-            {
-                dataInterval = Int32.Parse(DataCollectionIntervalTime);
-
-                // Sets the data collection timer interval
-                _data.DataCollectionIntervalTime = dataInterval;
-            }
-            catch (Exception dataIntervalError)
-            {
-                MessageBox.Show(_mainWindow, dataIntervalError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
-                return;
-            }
-            #endregion
-
-            // save vint hub configs
-            SavedVintHubs = UnsavedVintHubs;
-            _data.VintHubs = _savedVintHubs;
-
-            // save general config values
-            _data.MinSoilTemperature = _minSoilTemperature;
-            _data.MaxSoilTemperature = _maxSoilTemperature;
-            _data.MinAirTemperature = _minAirTemperature;
-            _data.MaxAirTemperature = _maxAirTemperature;
-            _data.MinHumidity = _minHumidity;
-            _data.MaxHumidity = _maxHumidity;
-            _data.MinMoisture = _minMoisture;
-            _data.MaxMoisture = _maxMoisture;
-            _data.MinOxygen = _minOxygen;
-            _data.MaxOxygen = _maxOxygen;
-            _data.MinVOC = _minVOC;
-            _data.MaxVOC = _maxVOC;
-            _data.RecipientEmailAddress = _recepientEmailAddress;
-            _data.SenderEmailAddress = _senderEmailAddress;
-            _data.SenderEmailPassword = _senderEmailPassword;
-            _data.SenderEmailSmtpAddress = _senderEmailSmtpAddress;
-            _data.SenderEmailSmtpPort = Convert.ToInt32(_senderEmailSmtpPort);
-            _data.DataCollectionIntervalTime = Convert.ToInt32(_dataCollectionIntervalTime);
-            _data.GpsEnabled = _gpsEnabled;
-
-            if (_data.SaveConfiguration() == "good" && _data.LoadConfiguration() == "good")
-            {
-                LoadConfiguration();
-
-                MessageBox.Show(_mainWindow, "Configuration was successfully saved and is now the current configuration.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
-            }  
             else
-                MessageBox.Show(_mainWindow, $"Configuration was not saved properly. Please ensure all fields contain valid input and try again", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+            {
+                MessageBox.Show(_mainWindow, $"Cannot save a configuration during a data collection session. Turn off data collection and retry.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+            }
         }
 
         void LoadConfiguration()
@@ -670,6 +688,21 @@ namespace TRADDataMonitor
                 HubPort3 = SelectedConfigHub.Sensor3.SensorType;
                 HubPort4 = SelectedConfigHub.Sensor4.SensorType;
                 HubPort5 = SelectedConfigHub.Sensor5.SensorType;
+
+                // Instantiates the data collection timer, sets the timer interval
+                _dataCollectionTimer = new Timer();
+                _dataCollectionTimer.Interval = Convert.ToInt32(DataCollectionIntervalTime);
+                _dataCollectionTimer.Elapsed += Tmr_Elapsed;
+
+                // Build GPS and VOC Sensors
+                if (GpsEnabled)
+                {
+                    _gps = new MyGpsSensor(-1, "GPS", 5000);
+                    _gps.thresholdBroken += SendEmailAlert;
+                }
+
+                AQS = new AirQualitySensor(_minVOC, _maxVOC, _minCO2, _minCO2);
+                AQS.thresholdBroken += SendEmailAlert;
             }
             else
             {
@@ -795,72 +828,97 @@ namespace TRADDataMonitor
 
         public void StartDataCollection()
         {
-            // Instantiates the data collection timer, sets the timer interval
-            _dataCollectionTimer = new Timer();
-            _dataCollectionTimer.Interval = Convert.ToInt32(DataCollectionIntervalTime);
-            _dataCollectionTimer.Elapsed += Tmr_Elapsed;
-
-            // builds gps sensor if needed
-            // TODO: add threshold value to GPS creation in startdatacollection method
-            if(GpsEnabled)
+            if (!_isCollectingData)
             {
-                _gps = new MyGpsSensor(-1, "GPS", -1);
-                _gps.thresholdBroken += SendEmailAlert;
-            }
-                
-            AQS = new AirQualitySensor(_minVOC, _maxVOC, _minCO2, _minCO2);
-            AQS.thresholdBroken += SendEmailAlert;
-
-            // open connections for all connected sensors
-            foreach (var hub in _savedVintHubs)
-            {
-                if (hub.Wireless)
-                    Net.EnableServerDiscovery(Phidget22.ServerType.DeviceRemote);
-                foreach (var sensor in hub.AllSensors)
+                try
                 {
-                    sensor.OpenConnection();
-                    sensor.thresholdBroken += SendEmailAlert;
+                    // open connections for all connected sensors
+
+                    if (_gps != null)
+                    {
+                    }
+
+                    AQS.OpenConnection();
+
+                    foreach (var hub in _savedVintHubs)
+                    {
+                        if (hub.Wireless)
+                            Net.EnableServerDiscovery(Phidget22.ServerType.DeviceRemote);
+                        foreach (var sensor in hub.AllSensors)
+                        {
+                            sensor.OpenConnection();
+                            sensor.thresholdBroken += SendEmailAlert;
+                        }
+                    }
+
+                    SelectedSessionHub = _savedVintHubs[0];
+
+
+                    _dataCollectionTimer.Start();
+                    DataCollectionStatus = "Enabled: Data is being collected";
+                    _isCollectingData = true;
+                    MessageBox.Show(_mainWindow, "Data Collection successfully initiated", "Data Collection Initiation Result", MessageBox.MessageBoxButtons.Ok);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(_mainWindow, "An error has occurred: \n" + ex.Message, "Data Collection Initiation Result", MessageBox.MessageBoxButtons.Ok);
                 }
             }
-
-            SelectedSessionHub = _savedVintHubs[0];
-
-            try
+            else
             {
-                _dataCollectionTimer.Start();
-                DataCollectionStatus = "Enabled: Data is being collected";
-                MessageBox.Show(_mainWindow, "Data Collection successfully initiated", "Data Collection Initiation Result", MessageBox.MessageBoxButtons.Ok);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(_mainWindow, "An error has occurred: \n" + ex.Message, "Data Collection Initiation Result", MessageBox.MessageBoxButtons.Ok);
+                MessageBox.Show(_mainWindow, "There is an already active data collection session", "Data Collection Initiation Result", MessageBox.MessageBoxButtons.Ok);
             }
         }
 
         public void StopDataCollection()
         {
+            if (_isCollectingData)
+            {
+                try
+                {
+                    // close connections for all connected sensors
+                    AQS.CloseConnection();
+                    foreach (var hub in _savedVintHubs)
+                    {
+                        if (hub.Wireless)
+                            Net.DisableServerDiscovery(Phidget22.ServerType.DeviceRemote);
+                        foreach (var sensor in hub.AllSensors)
+                        {
+                            sensor.CloseConnection();
+                        }
+                    }
+
+                    _dataCollectionTimer.Stop();
+                    SelectedSessionHub = null;
+                    DataCollectionStatus = "Disabled: No data is being collected";
+                    _isCollectingData = false;
+                    MessageBox.Show(_mainWindow, "Data Collection successfully halted.", "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(_mainWindow, "An error has occurred: \n" + ex.Message, "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
+                }
+            }
+            else
+            {
+                MessageBox.Show(_mainWindow, "No ongoing data collection to stop.", "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
+            }
+        }
+
+        public void ViewDatabase()
+        {
             try
             {
-                // close connections for all connected sensors
-                foreach (var hub in _savedVintHubs)
-                {
-                    if (hub.Wireless)
-                        Net.DisableServerDiscovery(Phidget22.ServerType.DeviceRemote);
-                    foreach (var sensor in hub.AllSensors)
-                    {
-                        sensor.CloseConnection();
-                    }
-                }
-
-                _dataCollectionTimer.Stop();
-                SelectedSessionHub = null;
-                DataCollectionStatus = "Disabled: No data is being collected";
-                MessageBox.Show(_mainWindow, "Data Collection successfully halted.", "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
+                ProcessStartInfo info = new ProcessStartInfo("bash", "sqlitebrowser ~/TRAD-Data-Monitor/TRADDataMonitor/TradDB.sqlite");
+                Process p = Process.Start(info);
+                p.WaitForExit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(_mainWindow, "An error has occurred: \n" + ex.Message, "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
+
+                throw;
             }
+            
         }
 
         // Timer tick event

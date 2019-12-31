@@ -82,6 +82,7 @@ namespace TRADDataMonitor
             this.secondMinThreshold = secondMinThreshold;
             this.secondMaxThreshold = secondMaxThreshold;
             this.wirelessEnabled = wireless;
+            this.hubName = hubName;
             this.HubPort = hubPort.ToString();
         }
 

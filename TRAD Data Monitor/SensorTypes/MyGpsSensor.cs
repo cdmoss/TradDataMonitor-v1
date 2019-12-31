@@ -30,7 +30,7 @@ namespace TRADDataMonitor.SensorTypes
             _GPSAlerts.AutoReset = true;
             _GPSAlerts.Elapsed += _GPSAlerts_Elapsed;
 
-            this.distanceThreshold = distanceThreshold;
+            this.distanceThreshold = (distanceThreshold / Math.PI / 6378 * 360);
 
             //Open the connection
             try

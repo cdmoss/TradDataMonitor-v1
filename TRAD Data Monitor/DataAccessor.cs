@@ -227,8 +227,6 @@ namespace TRADDataMonitor
                     }
                     _tradDBConn.Close();
 
-                   
-
                     result = "good";
                 }
                 catch (Exception ex)

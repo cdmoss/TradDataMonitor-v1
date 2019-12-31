@@ -33,11 +33,12 @@ namespace TRADDataMonitor.SensorTypes
 
         public AirQualitySensor(double minV, double maxV, double minC, double maxC)
         {
-            // create data timer for instance of sensor
-            _AirQualityData = new Timer(1000);
-            _AirQualityData.AutoReset = true;
-            _AirQualityData.Elapsed += new ElapsedEventHandler(GetWebData);
-            _AirQualityData.Start();
+            
+            // assign thresholds
+            _minVOC = minV;
+            _maxVOC = maxV;
+            _minCO2 = minC;
+            _maxCO2 = maxC;
 
             // create a VOC alert timer for instance of sensor
             _VOCAlerts = new Timer(600000);
@@ -49,11 +50,20 @@ namespace TRADDataMonitor.SensorTypes
             _CO2Alerts.AutoReset = true;
             _CO2Alerts.Elapsed += _CO2Alerts_Elapsed;
 
-            // assign thresholds
-            _minVOC = minV;
-            _maxVOC = maxV;
-            _minCO2 = minC;
-            _maxCO2 = maxC;
+            // create data timer for instance of sensor
+            _AirQualityData = new Timer(1000);
+            _AirQualityData.AutoReset = true;
+            _AirQualityData.Elapsed += new ElapsedEventHandler(GetWebData);
+        }
+
+        public void OpenConnection()
+        {
+            _AirQualityData.Start();
+        }
+
+        public void CloseConnection()
+        {
+            _AirQualityData.Stop();
         }
 
         // gets data from nodemcu webserver
@@ -62,7 +72,7 @@ namespace TRADDataMonitor.SensorTypes
             try
             {
                 HtmlWeb web = new HtmlWeb();
-                HtmlDocument document = web.Load("http://192.168.100.163");
+                HtmlDocument document = web.Load("http://10.0.0.71");
                 _lastVOC = Convert.ToInt32(document.DocumentNode.SelectSingleNode("/div/span[1]").InnerText);
                 _lastCO2 = Convert.ToInt32(document.DocumentNode.SelectSingleNode("/div/span[2]").InnerText);
                 _lastTimestamp = DateTime.Now;

@@ -25,6 +25,7 @@ namespace TRADDataMonitor.SensorTypes
 
             temperatureDevice = new TemperatureSensor();
             temperatureDevice.HubPort = hubPort;       
+
             temperatureDevice.IsHubPortDevice = false;          
             temperatureDevice.TemperatureChange += TemperatureDevice_TemperatureChange;
 
