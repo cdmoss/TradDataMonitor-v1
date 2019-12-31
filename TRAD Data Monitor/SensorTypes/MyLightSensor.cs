@@ -25,13 +25,23 @@ namespace TRADDataMonitor.SensorTypes
             try
             {
                 //Open the connection
-                if (wirelessEnabled)
-                    Net.EnableServerDiscovery(Phidget22.ServerType.DeviceRemote);
                 device.Open(4000);
             }
             catch (Exception ex)
             {
-                throw new Exception($"There was an error with hub port {hubPort}. Check connections and try again. \n \n System Error Message: \n" + ex.Message);
+                throw new Exception($"There was an error with the {_sensorType} sensor connected to port {hubPort} on hub: {hubName}. Check connections and try again. \n \n System Error Message: \n" + ex.Message);
+            }
+        }
+
+        public override void CloseConnection()
+        {
+            try
+            {
+                device.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"There was an error with the {_sensorType} sensor connected to port {hubPort} on hub: {hubName}. Check connections and try again. \n \n System Error Message: \n" + ex.Message);
             }
         }
 
@@ -39,17 +49,23 @@ namespace TRADDataMonitor.SensorTypes
         {
             lastIlluminance = e.Illuminance;
             lastTimestamp = DateTime.Now;
-            LiveData = lastIlluminance.ToString();
+            LiveData = lastIlluminance.ToString() + " lx";
 
-            if (lastIlluminance < minThreshold)
-            {
-                // Send an email alert that the threshold has exceeded the min value
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance);
+            if ((lastIlluminance < minThreshold || lastIlluminance > maxThreshold) && !_emailTimer.Enabled)
+            {                
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance, "broken");
+                _emailTimer.Enabled = true;
             }
-            if (lastIlluminance > maxThreshold)
+        }
+
+        public override void _emailTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance, "broken");
+
+            if (!(lastIlluminance < minThreshold || lastIlluminance > maxThreshold))
             {
-                // Send an email alert that the threshold has exceeded the max value
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance);
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastIlluminance, "fixed");
+                _emailTimer.Enabled = true;
             }
         }
 

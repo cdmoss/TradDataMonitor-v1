@@ -160,7 +160,6 @@ C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\runtimes\win-x86\native\netstandard2.0\SQLite.Interop.dll
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\runtimes\unix\lib\netcoreapp2.0\System.Drawing.Common.dll
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\runtimes\win\lib\netcoreapp2.0\System.Drawing.Common.dll
-C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.csprojAssemblyReference.cache
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.AssemblyInfoInputs.cache
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.AssemblyInfo.cs
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.csproj.CopyComplete
@@ -171,3 +170,4 @@ C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\BouncyCastle.Crypto.dll
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\HtmlAgilityPack.dll
 C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\System.Xml.XPath.XmlDocument.dll
+C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.csprojAssemblyReference.cache

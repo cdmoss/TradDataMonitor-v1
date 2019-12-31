@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Timers;
 using MimeKit;
 using MailKit;
+using Phidget22;
 
 namespace TRADDataMonitor
 {
@@ -29,8 +30,8 @@ namespace TRADDataMonitor
         // port assignment for current vint hub
         string _hubPort0, _hubPort1, _hubPort2, _hubPort3, _hubPort4, _hubPort5;
 
-        double _minSoilTemperature, _minAirTemperature, _minHumidity, _minMoisture, _minOxygen, _minVOC;
-        double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC;
+        double _minSoilTemperature, _minAirTemperature, _minHumidity, _minMoisture, _minOxygen, _minVOC, _minCO2;
+        double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC, _maxCO2;
         string _recepientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort, _dataCollectionIntervalTime;
         bool _gpsEnabled = false;
         ItemsChangeObservableCollection<VintHub> _unsavedVintHubs;
@@ -52,7 +53,7 @@ namespace TRADDataMonitor
         Bitmap _phidgetImage { get; set; } = new Bitmap("phidget_hub_6_ports.png");
 
         // sensor list for combo boxes
-        string[] _sensorTypes { get; set; } = { "Moisture", "Humidity", "Temperature", "Light", "Oxygen", "None" };
+        string[] _sensorTypes { get; set; } = { "Moisture", "Humidity/Air Temperature", "Soil Temperature", "Light", "Oxygen", "None" };
         #endregion
 
         #region properties
@@ -163,15 +164,18 @@ namespace TRADDataMonitor
             get { return _selectedConfigHub; }
             set 
             {    
-                _selectedConfigHub = value;
+                // prevent a weird error where this gets set to null when trying to load config after saving
+                if (value != null)
+                    _selectedConfigHub = value;
+
                 if (_selectedConfigHub != null)
                 {
-                    HubPort0 = value.Sensor0.SensorType;
-                    HubPort1 = value.Sensor1.SensorType;
-                    HubPort2 = value.Sensor2.SensorType;
-                    HubPort3 = value.Sensor3.SensorType;
-                    HubPort4 = value.Sensor4.SensorType;
-                    HubPort5 = value.Sensor5.SensorType;
+                    HubPort0 = _selectedConfigHub.Sensor0.SensorType;
+                    HubPort1 = _selectedConfigHub.Sensor1.SensorType;
+                    HubPort2 = _selectedConfigHub.Sensor2.SensorType;
+                    HubPort3 = _selectedConfigHub.Sensor3.SensorType;
+                    HubPort4 = _selectedConfigHub.Sensor4.SensorType;
+                    HubPort5 = _selectedConfigHub.Sensor5.SensorType;
                 }
                 
                 OnPropertyChanged();
@@ -298,6 +302,26 @@ namespace TRADDataMonitor
             {
                 _minVOC = value;
                 OnPropertyChanged(nameof(MinVOC));
+            }
+        }
+
+        public double MaxCO2
+        {
+            get { return _maxVOC; }
+            set
+            {
+                _maxCO2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double MinCO2
+        {
+            get { return _minCO2; }
+            set
+            {
+                _minCO2 = value;
+                OnPropertyChanged();
             }
         }
 
@@ -598,10 +622,8 @@ namespace TRADDataMonitor
 
             if (_data.SaveConfiguration() == "good" && _data.LoadConfiguration() == "good")
             {
-                //for(int i = 0; i < SavedVintHubs.Count; i++)
-                //{
-                //    SelectedSessionHub = SavedVintHubs[i];
-                //}
+                LoadConfiguration();
+
                 MessageBox.Show(_mainWindow, "Configuration was successfully saved and is now the current configuration.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
             }  
             else
@@ -634,13 +656,14 @@ namespace TRADDataMonitor
                 MaxOxygen = _data.MaxOxygen;
                 MinVOC = _data.MinVOC;
                 MaxVOC = _data.MaxVOC;
-
+                MinCO2 = _data.MinCO2;
+                MaxCO2 = _data.MaxCO2;
 
                 // load saved vint hubs
                 SavedVintHubs = _data.VintHubs;
                 UnsavedVintHubs = SavedVintHubs;
 
-                SelectedConfigHub = UnsavedVintHubs[0];
+                SelectedConfigHub = _unsavedVintHubs[0];
                 HubPort0 = SelectedConfigHub.Sensor0.SensorType;
                 HubPort1 = SelectedConfigHub.Sensor1.SensorType;
                 HubPort2 = SelectedConfigHub.Sensor2.SensorType;
@@ -655,7 +678,6 @@ namespace TRADDataMonitor
 
                 // create new hub and add it to unsaved vint hubs
                 UnsavedVintHubs = new ItemsChangeObservableCollection<VintHub>();
-
                 VintHub newHub = _data.CreateNewHub();
                 UnsavedVintHubs.Add(newHub);
                 SelectedConfigHub = newHub;
@@ -668,8 +690,6 @@ namespace TRADDataMonitor
                 HubPort4 = _sensorTypes[5];
                 HubPort5 = _sensorTypes[5];
 
-                
-
                 MessageBox.Show(_mainWindow, "No valid configuration profile was detected. Default values will be displayed in this form", "No Configuration Found", MessageBox.MessageBoxButtons.YesNoCancel);
             }
         }   
@@ -678,6 +698,7 @@ namespace TRADDataMonitor
             VintHub vintHub = _data.CreateNewHub();
             UnsavedVintHubs.Add(vintHub);
         }
+
         public void RemoveVintHub()
         {
             UnsavedVintHubs.Remove(SelectedConfigHub);
@@ -686,25 +707,31 @@ namespace TRADDataMonitor
                 UnsavedVintHubs.Add(_data.CreateNewHub());
                 DataCollectionIntervalTime = 1000.ToString();
             }
-            
-            SelectedConfigHub = UnsavedVintHubs[0];
+            SelectedConfigHub = _unsavedVintHubs[0];
         }
+
         // method that sends an email
-        public void SendEmailAlert(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, bool test)
+        public void SendEmailAlert(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, string emailType)
         {
             string subject;
             string message;
 
-            if(test)
+            if(emailType == "test")
             {
                 subject = "TEST ALERT";
                 message = $"ALERT: This is a test alert. If you are recieving this then the email alert system is configured correctly";
             }
-            else
+            else if (emailType == "broken")
             {
                 subject = "THRESHOLD BROKEN ALERT";
                 message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
             }
+            else
+            {
+                subject = "THRESHOLD FIXED ALERT";
+                message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
+            }
+
             SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
             NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
 
@@ -715,11 +742,56 @@ namespace TRADDataMonitor
             smtp01.Send(msg);
         }
 
-        public void SendTestEmailAlert()
+        // Overloaded email method for VOC and CO2
+        public void SendEmailAlert(double minThresh, double maxThresh, string sensor, double val, string emailType)
         {
-            SendEmailAlert(-1, -1, "testHub", "testSesnor", -1, -1, true);
+            string subject;
+            string message;
+
+            if (emailType == "fixed")
+            {
+                subject = "THRESHOLD BROKEN ALERT";
+                message = $"ALERT: Data from the {sensor} sensor exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
+            }
+            else
+            {
+                subject = "THRESHOLD FIXED ALERT";
+                message = $"ALERT: Data from the {sensor} sensor re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
+            }
+
+            SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
+            NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
+
+            System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
+            smtp01.Credentials = netCred;
+            smtp01.EnableSsl = true;
+            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
+            smtp01.Send(msg);
         }
 
+        // Overloaded email method for GPS
+        public void SendEmailAlert(double distanceThreshold, string sensor, double lat, double lng, double val)
+        {
+            string subject;
+            string message;
+
+            subject = "THRESHOLD BROKEN ALERT";
+            message = $"ALERT: Data from the {sensor} sensor exited the allowable radius of {distanceThreshold} km with a value of {val} km. The current latitude and longitiude values are: {lat}, {lng}.";        
+
+            SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
+            NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
+
+            System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
+            smtp01.Credentials = netCred;
+            smtp01.EnableSsl = true;
+            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
+            smtp01.Send(msg);
+        }
+        
+        public void SendTestEmailAlert()
+        {
+            SendEmailAlert(-1, -1, "testHub", "testSesnor", -1, -1, "test");
+        }
 
         public void StartDataCollection()
         {
@@ -731,18 +803,27 @@ namespace TRADDataMonitor
             // builds gps sensor if needed
             // TODO: add threshold value to GPS creation in startdatacollection method
             if(GpsEnabled)
+            {
                 _gps = new MyGpsSensor(-1, "GPS", -1);
-
-            AQS = new AirQualitySensor(_data.DataCollectionIntervalTime);
+                _gps.thresholdBroken += SendEmailAlert;
+            }
+                
+            AQS = new AirQualitySensor(_minVOC, _maxVOC, _minCO2, _minCO2);
+            AQS.thresholdBroken += SendEmailAlert;
 
             // open connections for all connected sensors
             foreach (var hub in _savedVintHubs)
             {
+                if (hub.Wireless)
+                    Net.EnableServerDiscovery(Phidget22.ServerType.DeviceRemote);
                 foreach (var sensor in hub.AllSensors)
                 {
                     sensor.OpenConnection();
+                    sensor.thresholdBroken += SendEmailAlert;
                 }
             }
+
+            SelectedSessionHub = _savedVintHubs[0];
 
             try
             {
@@ -760,7 +841,19 @@ namespace TRADDataMonitor
         {
             try
             {
+                // close connections for all connected sensors
+                foreach (var hub in _savedVintHubs)
+                {
+                    if (hub.Wireless)
+                        Net.DisableServerDiscovery(Phidget22.ServerType.DeviceRemote);
+                    foreach (var sensor in hub.AllSensors)
+                    {
+                        sensor.CloseConnection();
+                    }
+                }
+
                 _dataCollectionTimer.Stop();
+                SelectedSessionHub = null;
                 DataCollectionStatus = "Disabled: No data is being collected";
                 MessageBox.Show(_mainWindow, "Data Collection successfully halted.", "Data Collection Stop Result", MessageBox.MessageBoxButtons.Ok);
             }
@@ -794,7 +887,7 @@ namespace TRADDataMonitor
                 {
                     if (sensor.SensorType != "None")
                     {
-                        if (sensor.SensorType == "Humidity")
+                        if (sensor.SensorType == "Humidity/Air Temperature")
                         {
                             MyHumidityAirTemperatureSensor humiditySensor = (MyHumidityAirTemperatureSensor)sensor;
                             string[] humidity = humiditySensor.ProduceHumidityData();

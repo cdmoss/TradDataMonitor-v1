@@ -45,11 +45,13 @@ namespace TRADDataMonitor
         public double MinMoisture { get; set; }
         public double MinOxygen { get; set; }
         public double MinVOC { get; set; }
+        public double MinCO2 { get; set; }
         public double MaxSoilTemperature { get; set; }
         public double MaxAirTemperature { get; set; }
         public double MaxHumidity { get; set; }
         public double MaxMoisture { get; set; }
         public double MaxOxygen { get; set; }
+        public double MaxCO2 { get; set; }
         public double MaxVOC { get; set; }
         public bool GpsEnabled { get; set; }
         public ItemsChangeObservableCollection<VintHub> VintHubs { get; set; }
@@ -75,13 +77,13 @@ namespace TRADDataMonitor
                 case "Light":
                     ret = new MyLightSensor(hubPort, sensorName, hubName, -1, -1, wireless);
                     break;
-                case "Humidity":
-                    ret = new MyHumidityAirTemperatureSensor(hubPort, sensorName, hubName, MinHumidity, MaxHumidity, wireless);
+                case "Humidity/Air Temperature":
+                    ret = new MyHumidityAirTemperatureSensor(hubPort, sensorName, hubName, MinHumidity, MaxHumidity, MinAirTemperature, MaxAirTemperature, wireless);
                     break;
                 case "Oxygen":
                     ret = new MyOxygenSensor(hubPort, sensorName, hubName, MinOxygen, MaxOxygen, wireless);
                     break;
-                case "Temperature":
+                case "Soil Temperature":
                     ret = new MySoilTemperatureSensor(hubPort, sensorName, hubName, MinSoilTemperature, MaxSoilTemperature, wireless);
                     break;
                 case "None":
@@ -162,28 +164,34 @@ namespace TRADDataMonitor
                                     MinOxygen = reader.GetDouble(10);
 
                                 if (reader[11].GetType().ToString() != "System.DBNull")
-                                    MinVOC = reader.GetDouble(11);
+                                    MinCO2 = reader.GetDouble(11);
 
                                 if (reader[12].GetType().ToString() != "System.DBNull")
-                                    MaxSoilTemperature = reader.GetDouble(12);
+                                    MinVOC = reader.GetDouble(12);
 
                                 if (reader[13].GetType().ToString() != "System.DBNull")
-                                    MaxAirTemperature = reader.GetDouble(13);
+                                    MaxSoilTemperature = reader.GetDouble(13);
 
                                 if (reader[14].GetType().ToString() != "System.DBNull")
-                                    MaxHumidity = reader.GetDouble(14);
+                                    MaxAirTemperature = reader.GetDouble(14);
 
-                                if (reader[12].GetType().ToString() != "System.DBNull")
-                                    MaxMoisture = reader.GetDouble(15);
+                                if (reader[15].GetType().ToString() != "System.DBNull")
+                                    MaxHumidity = reader.GetDouble(15);
 
                                 if (reader[16].GetType().ToString() != "System.DBNull")
-                                    MaxOxygen = reader.GetDouble(16);
+                                    MaxMoisture = reader.GetDouble(16);
 
                                 if (reader[17].GetType().ToString() != "System.DBNull")
-                                    MaxVOC = reader.GetDouble(18);
+                                    MaxOxygen = reader.GetDouble(17);
 
                                 if (reader[18].GetType().ToString() != "System.DBNull")
-                                    GpsEnabled = reader.GetBoolean(18);
+                                    MaxVOC = reader.GetDouble(18);
+
+                                if (reader[19].GetType().ToString() != "System.DBNull")
+                                    MaxCO2 = reader.GetDouble(19);
+
+                                if (reader[20].GetType().ToString() != "System.DBNull")
+                                    GpsEnabled = reader.GetBoolean(20);
                             }
                         }
                     }
@@ -252,13 +260,15 @@ namespace TRADDataMonitor
                                                         @MinHumidity,
                                                         @MinMoisture,
                                                         @MinOxygen,
-                                                        @MinVOC,                                                        
+                                                        @MinCO2,
+                                                        @MinVOC,                                                                                                                
                                                         @MaxSoilTemperature,
                                                         @MaxAirTemperature,
                                                         @MaxHumidity,
                                                         @MaxMoisture,
                                                         @MaxOxygen,
                                                         @MaxVOC,
+                                                        @MaxVOC,    
                                                         @Gps
                                                         )";
 
@@ -277,12 +287,14 @@ namespace TRADDataMonitor
                                                     MinMoisture = @MinMoisutre,
                                                     MinOxygen = @MinOxygen,
                                                     MinVOC = @MinVOC,
+                                                    MinCO2 = @MinCO2,   
                                                     MaxSoilTemperature = @MaxSoilTemperature,
                                                     MaxAirTemperature = @MaxAirTemperature,
                                                     MaxHumidity = @MaxHumidity,
                                                     MaxMoisture = @MaxMoisture,
                                                     MaxOxygen = @MaxOxygen,
                                                     MaxVOC = @MaxVOC,
+                                                    MaxCO2 = @MaxCO2,
                                                     Gps = @Gps";
 
             //query to create new hub config
@@ -339,12 +351,14 @@ namespace TRADDataMonitor
                     generalConfigCmd.Parameters.AddWithValue("@MinMoisture", MinMoisture);
                     generalConfigCmd.Parameters.AddWithValue("@MinOxygen", MinOxygen);
                     generalConfigCmd.Parameters.AddWithValue("@MinVOC", MinVOC);
+                    generalConfigCmd.Parameters.AddWithValue("@MinCO2", MinCO2);
                     generalConfigCmd.Parameters.AddWithValue("@MaxSoilTemperature", MaxSoilTemperature);
                     generalConfigCmd.Parameters.AddWithValue("@MaxAirTemperature", MaxAirTemperature);
                     generalConfigCmd.Parameters.AddWithValue("@MaxHumidity", MaxHumidity);
                     generalConfigCmd.Parameters.AddWithValue("@MaxMoisture", MaxMoisture);
                     generalConfigCmd.Parameters.AddWithValue("@MaxOxygen", MaxOxygen);
                     generalConfigCmd.Parameters.AddWithValue("@MaxVOC", MaxVOC);
+                    generalConfigCmd.Parameters.AddWithValue("@MaxCO2", MaxCO2);
                     generalConfigCmd.Parameters.AddWithValue("@Gps", GpsEnabled);
                     
                     generalConfigCmd.ExecuteNonQuery();
@@ -458,6 +472,7 @@ namespace TRADDataMonitor
                                             MinHumidity real not null,
                                             MinMoisture real not null,
                                             MinOxygen real not null,
+                                            MinCO2 real not null,
                                             MinVOC real not null,
                                             MaxSoilTemperature real not null,
                                             MaxAirTemperature real not null,
@@ -465,6 +480,7 @@ namespace TRADDataMonitor
                                             MaxMoisture real not null,
                                             MaxOxygen real not null,
                                             MaxVOC real not null,
+                                            MaxCO2 real not null,
                                             Gps bool not null);";
 
             try

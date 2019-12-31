@@ -6,263 +6,284 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TRADDataMonitor.MainWindow"
         Title="TRAD Data Monitor">
-  <Grid Margin="25 10 25 25">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="5*"/>
-      <ColumnDefinition Width="3*"/>
-      <ColumnDefinition Width="4*"/>
-    </Grid.ColumnDefinitions>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="1*"/>
-      <RowDefinition Height="1*"/>
-      <RowDefinition Height="4*"/>
-      <RowDefinition Height="6*"/>
-    </Grid.RowDefinitions>
-    <TextBlock Text="TRAD Data Monitor Control Panel" Grid.Row="0" FontSize="25" FontWeight="Bold" Grid.ColumnSpan="3" HorizontalAlignment="Center" TextWrapping="Wrap"/>
-    <TextBlock Text="(If you build a new configuration, you must save it before you can use it to collect data)" Grid.Row="1" FontSize="20" FontWeight="SemiBold" FontStyle="Italic" Grid.ColumnSpan="3" Margin="0 0 0 20" HorizontalAlignment="Center" TextWrapping="Wrap"/>
-    <Border BorderBrush="Black" BorderThickness="1" Background="Linen" Padding="10" Grid.Column="0" Grid.Row="2">
-      <Grid >
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*"/>
-          <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Email Configuration" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0 0 0 10"/>
-        <TextBlock Text="Recipient Email address:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
-        <TextBlock Text="Sender Email Address:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
-        <TextBlock Text="Sender Email Account Password:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
-        <TextBlock Text="Sender Email SMTP Address:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
-        <TextBlock Text="Sender Email SMTP Port" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center"/>
-        <TextBox Name="txtRecipientEmailAddress" Text="{Binding RecipientEmailAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
-        <TextBox Name="txtSenderEmailAddress" Text="{Binding SenderEmailAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2"/>
-        <TextBox Name="txtSenderEmailAccountPassword" Text="{Binding SenderEmailPassword, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2"/>
-        <TextBox Name="txtSenderEmailSmtpAddress" Text="{Binding SenderEmailSmtpAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2"/>
-        <TextBox Name="txtSenderEmailSmtpPort" Text="{Binding SenderEmailSmtpPort, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2"/>
-      </Grid>
-    </Border>
-    <Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="1" Grid.Row="2">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*"/>
-          <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="3*"/>
-          <RowDefinition Height="3*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Actions" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 10"/>
-        <Button Name="btnSaveConfiguration" Command="{Binding $parent[Window].DataContext.SaveConfiguration}" Grid.Row="2" Grid.Column="0">
-          <Button.Content>
-            <TextBlock Text="Save Configuration" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold" />
-          </Button.Content>
-        </Button>
-        <Button Name="btnTestEmailNotifications" Command="{Binding $parent[Window].DataContext.SendTestEmailAlert}" Grid.Column="1" Grid.Row="2">
-          <Button.Content>
-            <TextBlock Text="Test Email Alert" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
-          </Button.Content>
-        </Button>
-        <Button Name="btnStartDataCollection"  Command="{Binding $parent[Window].DataContext.StartDataCollection}" Background="LightGreen" Grid.Column="0" Grid.Row="1">
-          <Button.Content>
-            <TextBlock Text="Start Data Collection" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
-          </Button.Content>
-        </Button>
-        <Button Name="btnStopDataCollection" Command="{Binding $parent[Window].DataContext.StopDataCollection}" Background="Salmon" Grid.Column="1" Grid.Row="1">
-          <Button.Content>
-            <TextBlock Text="Stop Data Collection" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
-          </Button.Content>
-        </Button>
-      </Grid>
-    </Border>
-    <Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="3*"/>
-		  <ColumnDefinition Width="2*"/>
-		  <ColumnDefinition Width="3*"/>
-          <ColumnDefinition Width="6*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-			<RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-		<TextBlock Text="Sensor Configuration" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 10"/>
-		<TextBlock Text="Data Collection Frequency (ms)" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
-		<TextBox Name="txtDataCollectionIntervalTime" Text="{Binding DataCollectionIntervalTime, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
-		<TextBlock Text="Hub Name" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding SelectedConfigHub.HubName, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Margin="2"/>
-		<TextBlock Text="Port 0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Port 1" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Port 2" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Port 3" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Port 4" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Port 5" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
-		<TextBlock Text="Wireless" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
-		<DropDown Name="cmbHubPort0" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort0, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort1" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort1, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort2" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort2, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort3" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort3, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort4" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort4, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" Margin="2"/>
-		<ComboBox Name="cmbHubPort5" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort5, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Margin="2"/>
-	    <CheckBox IsChecked="{Binding SelectedConfigHub.Wireless}" Grid.Column="1" Grid.Row="9"/>
-		  <ListBox Items="{Binding UnsavedVintHubs}" SelectedItem="{Binding SelectedConfigHub}" Grid.Column="2" Grid.Row="1" Grid.RowSpan="6" Margin="10 2">
-			  <ListBox.ItemTemplate>
-				  <DataTemplate>
-					  <Grid>
-						  <Grid.ColumnDefinitions>
-							  <ColumnDefinition Width="auto"/>
-							  <ColumnDefinition Width="auto"/>
-						  </Grid.ColumnDefinitions>
-						  <Grid.RowDefinitions>
-							  <RowDefinition Height="auto"/>
-							  <RowDefinition Height="auto"/>
-						  </Grid.RowDefinitions>
-						  <TextBlock Text="Hub ID: " Grid.Column="0"/>
-						  <TextBlock Text="{Binding HubName}" Grid.Column="1"/>
-						  <TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
-						  <TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
-					  </Grid>
-				  </DataTemplate>
-			  </ListBox.ItemTemplate>
-		  </ListBox>
-		<Grid Grid.Column="2" Grid.Row="7" Grid.RowSpan="2">
+	<Border Padding="25 10 25 10">
+		<Grid>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*"/>
-				<ColumnDefinition Width="1*"/>
-			</Grid.ColumnDefinitions>
-			<Button Name="Add New Vint Hub" Command="{Binding $parent[Window].DataContext.CreateNewVintHub}" Grid.Column="0" Margin="10 2 2 2">
-				<Button.Content>
-					<TextBlock Text="Add Vint Hub" TextAlignment="Center" TextWrapping="Wrap"/>
-				</Button.Content>
-			</Button>
-			<Button Name="Remove Vint Hub" Command="{Binding $parent[Window].DataContext.RemoveVintHub}" Grid.Column="1" Margin="2 2 10 2">
-				<Button.Content>
-					<TextBlock Text="Remove Vint Hub" TextAlignment="Center" TextWrapping="Wrap"/>
-				</Button.Content>
-			</Button>
-		</Grid>
-		
-		<Grid Grid.Column="3" Grid.Row="1" Grid.RowSpan="9" Margin="10">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="6*"/>
-				<ColumnDefinition Width="2*"/>
-				<ColumnDefinition Width="1*"/>
-				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="5*"/>
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="4*"/>
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="1*"/>
 				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
+				<RowDefinition Height="4*"/>
+				<RowDefinition Height="6*"/>
 			</Grid.RowDefinitions>
-			<TextBlock Text="Acceptable Soil Temperature Range:" VerticalAlignment="Center"/>
-			<TextBlock Text="Acceptable Air Temperature Range:" Grid.Row="1" VerticalAlignment="Center"/>
-			<TextBlock Text="Acceptable Humidity Range:" Grid.Row="2" VerticalAlignment="Center"/>
-			<TextBlock Text="Acceptable Soil Moisture Range:" Grid.Row="3" VerticalAlignment="Center" />
-			<TextBlock Text="Acceptable Oxygen Range:" Grid.Row="4" VerticalAlignment="Center" />
-			<TextBlock Text="Acceptable VOC Range:" Grid.Row="5" VerticalAlignment="Center"/>
-			<TextBox Text="{Binding MinSoilTemperature, Mode=TwoWay}" Grid.Column="1" Margin="2"/>
-			<TextBox Text="{Binding MinAirTemperature, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
-			<TextBox Text="{Binding MinHumidity, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2"/>
-			<TextBox Text="{Binding MinMoisture, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2"/>
-			<TextBox Text="{Binding MinOxygen, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2"/>
-			<TextBox Text="{Binding MinVOC, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2"/>
-			<TextBlock Grid.Column="2" Text="to" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="to" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="to" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="to" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="to" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="to" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-			<TextBox Text="{Binding MaxSoilTemperature, Mode=TwoWay}" Grid.Column="3" Margin="2"/>
-			<TextBox Text="{Binding MaxAirTemperature, Mode=TwoWay}" Grid.Column="3" Grid.Row="1" Margin="2"/>
-			<TextBox Text="{Binding MaxHumidity, Mode=TwoWay}" Grid.Column="3" Grid.Row="2" Margin="2"/>
-			<TextBox Text="{Binding MaxMoisture, Mode=TwoWay}" Grid.Column="3" Grid.Row="3" Margin="2"/>
-			<TextBox Text="{Binding MaxOxygen, Mode=TwoWay}" Grid.Column="3" Grid.Row="4" Margin="2"/>
-			<TextBox Text="{Binding MaxVOC, Mode=TwoWay}" Grid.Column="3" Grid.Row="5" Margin="2"/>
-			<CheckBox IsChecked="{Binding GpsEnabled, Mode=TwoWay}" Content="GPS" Grid.Row="6" Grid.Column="0"/>
-		</Grid>
-      </Grid>
-    </Border>
-    <Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="3" Grid.Row="2" Grid.RowSpan="2">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*"/>
-          <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-          <RowDefinition Height="1*"/>
-		  <RowDefinition Height="1*"/>
-		  <RowDefinition Height="10*"/>
-		  <RowDefinition Height="4*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Current Monitoring Session Info" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 10"/>
-        <TextBlock Text="Collection Status:" Grid.Column="0" Grid.Row="1"/>
-        <TextBlock Text="{Binding DataCollectionStatus, Mode=TwoWay}" Grid.Column="1" Grid.Row="1"/>
-		<TextBlock Text="SensorType" Grid.Column="0" Grid.Row="2"/>
-		<TextBlock Text="Data" Grid.Column="1" Grid.Row="2"/>
-		<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1*"/>
-				<ColumnDefinition Width="1*"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Text="Air Quality Sensor:"/>
-			<TextBlock Text="{Binding AQS.LiveData}" Grid.Column="1"/>
-		</Grid>
-		<ItemsControl Items="{Binding SelectedSessionHub.AllSensors}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Margin="0 0 0 10">
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<Grid>
+			<TextBlock Text="TRAD Data Monitor Control Panel" Grid.Row="0" FontSize="25" FontWeight="Bold" Grid.ColumnSpan="3" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+			<TextBlock Text="(If you build a new configuration, you must save it before you can use it to collect data)" Grid.Row="1" FontSize="20" FontWeight="SemiBold" FontStyle="Italic" Grid.ColumnSpan="3" Margin="0 0 0 20" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+			<Border BorderBrush="Black" BorderThickness="1" Background="Linen" Padding="10" Grid.Column="0" Grid.Row="2">
+				<Grid >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="Email Configuration" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0 0 0 10"/>
+					<TextBlock Text="Recipient Email address:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
+					<TextBlock Text="Sender Email Address:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
+					<TextBlock Text="Sender Email Account Password:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
+					<TextBlock Text="Sender Email SMTP Address:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
+					<TextBlock Text="Sender Email SMTP Port" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center"/>
+					<TextBox Name="txtRecipientEmailAddress" Text="{Binding RecipientEmailAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
+					<TextBox Name="txtSenderEmailAddress" Text="{Binding SenderEmailAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2"/>
+					<TextBox Name="txtSenderEmailAccountPassword" Text="{Binding SenderEmailPassword, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2"/>
+					<TextBox Name="txtSenderEmailSmtpAddress" Text="{Binding SenderEmailSmtpAddress, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2"/>
+					<TextBox Name="txtSenderEmailSmtpPort" Text="{Binding SenderEmailSmtpPort, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2"/>
+				</Grid>
+			</Border>
+			<Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="1" Grid.Row="2">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="3*"/>
+						<RowDefinition Height="3*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="Actions" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0 0 0 10"/>
+					<Button Name="btnSaveConfiguration" Command="{Binding $parent[Window].DataContext.SaveConfiguration}" Grid.Row="2" Grid.Column="0">
+						<Button.Content>
+							<TextBlock Text="Save Configuration" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold" />
+						</Button.Content>
+					</Button>
+					<Button Name="btnTestEmailNotifications" Command="{Binding $parent[Window].DataContext.SendTestEmailAlert}" Grid.Column="1" Grid.Row="2">
+						<Button.Content>
+							<TextBlock Text="Test Email Alert" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
+						</Button.Content>
+					</Button>
+					<Button Name="btnStartDataCollection"  Command="{Binding $parent[Window].DataContext.StartDataCollection}" Background="LightGreen" Grid.Column="0" Grid.Row="1">
+						<Button.Content>
+							<TextBlock Text="Start Data Collection" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
+						</Button.Content>
+					</Button>
+					<Button Name="btnStopDataCollection" Command="{Binding $parent[Window].DataContext.StopDataCollection}" Background="Salmon" Grid.Column="1" Grid.Row="1">
+						<Button.Content>
+							<TextBlock Text="Stop Data Collection" TextAlignment="Center" TextWrapping="Wrap" FontSize="15" FontWeight="Bold"/>
+						</Button.Content>
+					</Button>
+				</Grid>
+			</Border>
+			<Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="6*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="Sensor Configuration" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 10"/>
+					<TextBlock Text="Data Collection Frequency (ms)" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+					<TextBox Name="txtDataCollectionIntervalTime" Text="{Binding DataCollectionIntervalTime, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
+					<TextBlock Text="Hub Name" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBox Text="{Binding SelectedConfigHub.HubName, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Margin="2"/>
+					<TextBlock Text="Port 0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Port 1" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Port 2" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Port 3" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Port 4" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Port 5" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+					<TextBlock Text="Wireless" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+					<DropDown Name="cmbHubPort0" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort0, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Margin="2"/>
+					<ComboBox Name="cmbHubPort1" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort1, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="2"/>
+					<ComboBox Name="cmbHubPort2" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort2, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Margin="2"/>
+					<ComboBox Name="cmbHubPort3" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort3, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" Margin="2"/>
+					<ComboBox Name="cmbHubPort4" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort4, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" Margin="2"/>
+					<ComboBox Name="cmbHubPort5" Items="{Binding _sensorTypes}" SelectedItem="{Binding HubPort5, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Margin="2"/>
+					<CheckBox IsChecked="{Binding SelectedConfigHub.Wireless}" Grid.Column="1" Grid.Row="9"/>
+					<ListBox Items="{Binding UnsavedVintHubs}" SelectedItem="{Binding SelectedConfigHub}" Grid.Column="2" Grid.Row="1" Grid.RowSpan="6" Margin="10 2">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="auto"/>
+										<ColumnDefinition Width="auto"/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+									</Grid.RowDefinitions>
+									<TextBlock Text="Hub ID: " Grid.Column="0"/>
+									<TextBlock Text="{Binding HubName}" Grid.Column="1"/>
+									<TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
+									<TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
+								</Grid>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+					<Grid Grid.Column="2" Grid.Row="7" Grid.RowSpan="2">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding SensorType}" Grid.Column="0"/>
-						<TextBlock Text="{Binding LiveData}" Grid.Column="1"/>
+						<Button Name="Add New Vint Hub" Command="{Binding $parent[Window].DataContext.CreateNewVintHub}" Grid.Column="0" Margin="10 2 2 2">
+							<Button.Content>
+								<TextBlock Text="Add Vint Hub" TextAlignment="Center" TextWrapping="Wrap"/>
+							</Button.Content>
+						</Button>
+						<Button Name="Remove Vint Hub" Command="{Binding $parent[Window].DataContext.RemoveVintHub}" Grid.Column="1" Margin="2 2 10 2">
+							<Button.Content>
+								<TextBlock Text="Remove Vint Hub" TextAlignment="Center" TextWrapping="Wrap"/>
+							</Button.Content>
+						</Button>
 					</Grid>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-		<ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Margin="10 2">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<Grid>
+					<Grid Grid.Column="3" Grid.Row="1" Grid.RowSpan="9" Margin="10">
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="auto"/>
-							<ColumnDefinition Width="auto"/>
+							<ColumnDefinition Width="4*"/>
+							<ColumnDefinition Width="2*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="2*"/>
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="auto"/>
-							<RowDefinition Height="auto"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
 						</Grid.RowDefinitions>
-						<TextBlock Text="Hub ID: " Grid.Column="0"/>
-						<TextBlock Text="{Binding HubName}" Grid.Column="1"/>
-						<TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
-						<TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
+						<TextBlock Text="Soil Temperature Range:" VerticalAlignment="Center"/>
+						<TextBlock Text="Air Temperature Range:" Grid.Row="1" VerticalAlignment="Center"/>
+						<TextBlock Text="Humidity Range:" Grid.Row="2" VerticalAlignment="Center"/>
+						<TextBlock Text="Soil Moisture Range:" Grid.Row="3" VerticalAlignment="Center" />
+						<TextBlock Text="Oxygen Range:" Grid.Row="4" VerticalAlignment="Center" />
+						<TextBlock Text="VOC Range:" Grid.Row="5" VerticalAlignment="Center"/>
+						<TextBlock Text="CO2 Range:" Grid.Row="6" VerticalAlignment="Center"/>
+						<TextBox Text="{Binding MinSoilTemperature, Mode=TwoWay}" Grid.Column="1" Margin="2"/>
+						<TextBox Text="{Binding MinAirTemperature, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2"/>
+						<TextBox Text="{Binding MinHumidity, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2"/>
+						<TextBox Text="{Binding MinMoisture, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2"/>
+						<TextBox Text="{Binding MinOxygen, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2"/>
+						<TextBox Text="{Binding MinVOC, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2"/>
+						<TextBox Text="{Binding MinCO2, Mode=TwoWay}" Grid.Column="1" Grid.Row="6" Margin="2"/>
+						<TextBlock Grid.Column="2" Text="to" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="to" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="to" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="to" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="to" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="to" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBox Text="{Binding MaxSoilTemperature, Mode=TwoWay}" Grid.Column="3" Margin="2"/>
+						<TextBox Text="{Binding MaxAirTemperature, Mode=TwoWay}" Grid.Column="3" Grid.Row="1" Margin="2"/>
+						<TextBox Text="{Binding MaxHumidity, Mode=TwoWay}" Grid.Column="3" Grid.Row="2" Margin="2"/>
+						<TextBox Text="{Binding MaxMoisture, Mode=TwoWay}" Grid.Column="3" Grid.Row="3" Margin="2"/>
+						<TextBox Text="{Binding MaxOxygen, Mode=TwoWay}" Grid.Column="3" Grid.Row="4" Margin="2"/>
+						<TextBox Text="{Binding MaxVOC, Mode=TwoWay}" Grid.Column="3" Grid.Row="5" Margin="2"/>
+						<TextBox Text="{Binding MaxCO2, Mode=TwoWay}" Grid.Column="3" Grid.Row="6" Margin="2"/>
+						<CheckBox IsChecked="{Binding GpsEnabled, Mode=TwoWay}" Content="GPS" Grid.Row="7" Grid.Column="0"/>
 					</Grid>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-      </Grid>
-    </Border>
-  </Grid>
+				</Grid>
+			</Border>
+			<Border Background="Linen" BorderBrush="Black" BorderThickness="1" Padding="10" Grid.Column="3" Grid.Row="2" Grid.RowSpan="2">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="3*"/>
+						<ColumnDefinition Width="5*"/>
+						<ColumnDefinition Width="5*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="10*"/>
+						<RowDefinition Height="4*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="Current Monitoring Session Info" FontWeight="SemiBold" FontSize="13" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0 0 0 25"/>
+					<TextBlock Text="Collection Status:" Grid.Column="0" Grid.Row="1" Margin="0 0 0 10"/>
+					<TextBlock Text="{Binding DataCollectionStatus, Mode=TwoWay}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="0 0 0 10"/>
+					<Grid Background="Linen" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0 0 0 10">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="3*"/>
+							<ColumnDefinition Width="4*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="Air Quality Sensor:" Grid.Column="0"/>
+						<TextBlock Text="{Binding AQS.LiveData}" Grid.Column="1"/>
+					</Grid>
+					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="0" Grid.Row="3">
+						<TextBlock Text="Port" Foreground="Linen" Grid.Column="0" Grid.Row="3" TextAlignment="Center"/>
+					</Border>
+					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="1" Grid.Row="3">
+						<TextBlock Text="SensorType" Foreground="Linen" Grid.Column="1" Grid.Row="3" TextAlignment="Center"/>
+					</Border>
+					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="2" Grid.Row="3">
+						<TextBlock Text="Data" Foreground="Linen" Grid.Column="2" Grid.Row="3" TextAlignment="Center"/>
+					</Border>
+					<ItemsControl Items="{Binding SelectedSessionHub.AllSensors}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 0 10">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="3*"/>
+										<ColumnDefinition Width="5*"/>
+										<ColumnDefinition Width="5*"/>
+									</Grid.ColumnDefinitions>
+									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="0">
+										<TextBlock Text="{Binding HubPort}" TextAlignment="Center"/>
+									</Border>
+									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="1">
+										<TextBlock Text="{Binding SensorType}" TextAlignment="Center"/>
+									</Border>
+									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="2">
+										<TextBlock Text="{Binding LiveData}" TextAlignment="Center"/>
+									</Border>
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+					<ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" Margin="10 2">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="auto"/>
+										<ColumnDefinition Width="auto"/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+									</Grid.RowDefinitions>
+									<TextBlock Text="Hub ID: " Grid.Column="0"/>
+									<TextBlock Text="{Binding HubName}" Grid.Column="1"/>
+									<TextBlock Text="Wireless: " Grid.Column="0" Grid.Row="1"/>
+									<TextBlock Text="{Binding WirelessString}" Grid.Column="1" Grid.Row="1"/>
+								</Grid>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</Grid>
+			</Border>
+		</Grid>
+	</Border>
 </Window>
