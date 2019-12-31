@@ -9,7 +9,7 @@ namespace TRADDataMonitor
 {
     public class PhidgetSensor : INotifyPropertyChanged
     {
-        protected Timer _emailTimer = new Timer(5000);
+        protected Timer _emailTimer = new Timer(60000);
         protected int hubPort = -1;
         protected double minThreshold = -1, maxThreshold = -1, secondMinThreshold = -1, secondMaxThreshold = -1;
         protected bool hubPortDevice = true, thresholdEnabled = false, wirelessEnabled;
