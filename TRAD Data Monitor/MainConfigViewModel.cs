@@ -877,7 +877,7 @@ namespace TRADDataMonitor
                 try
                 {
                     // close connections for all connected sensors
-                    AQS.CloseConnection();
+                    _aqs.CloseConnection();
                     foreach (var hub in _savedVintHubs)
                     {
                         if (hub.Wireless)
@@ -907,17 +907,6 @@ namespace TRADDataMonitor
 
         public void ViewDatabase()
         {
-            try
-            {
-                ProcessStartInfo info = new ProcessStartInfo("bash", "sqlitebrowser ~/TRAD-Data-Monitor/TRADDataMonitor/TradDB.sqlite");
-                Process p = Process.Start(info);
-                p.WaitForExit();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
             
         }
 

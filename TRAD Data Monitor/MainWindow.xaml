@@ -228,14 +228,14 @@
 						<TextBlock Text="Air Quality Sensor:" Grid.Column="0"/>
 						<TextBlock Text="{Binding AQS.LiveData}" Grid.Column="1"/>
 					</Grid>
-					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="0" Grid.Row="3">
-						<TextBlock Text="Port" Foreground="Linen" Grid.Column="0" Grid.Row="3" TextAlignment="Center"/>
+					<Border Background="#D3D3D3" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="0" Grid.Row="3">
+						<TextBlock Text="Port" Foreground="Black" Grid.Column="0" Grid.Row="3" TextAlignment="Center"/>
 					</Border>
-					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="1" Grid.Row="3">
-						<TextBlock Text="SensorType" Foreground="Linen" Grid.Column="1" Grid.Row="3" TextAlignment="Center"/>
+					<Border Background="#D3D3D3" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="1" Grid.Row="3">
+						<TextBlock Text="Sensor Type" Foreground="Black" Grid.Column="1" Grid.Row="3" TextAlignment="Center"/>
 					</Border>
-					<Border Background="#5D432A" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="2" Grid.Row="3">
-						<TextBlock Text="Data" Foreground="Linen" Grid.Column="2" Grid.Row="3" TextAlignment="Center"/>
+					<Border Background="#D3D3D3" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="2" Grid.Row="3">
+						<TextBlock Text="Data" Foreground="Black" Grid.Column="2" Grid.Row="3" TextAlignment="Center"/>
 					</Border>
 					<ItemsControl Items="{Binding SelectedSessionHub.AllSensors}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 0 10">
 						<ItemsControl.ItemTemplate>
@@ -246,13 +246,13 @@
 										<ColumnDefinition Width="5*"/>
 										<ColumnDefinition Width="5*"/>
 									</Grid.ColumnDefinitions>
-									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="0">
+									<Border Background="#EEEEEE" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="0">
 										<TextBlock Text="{Binding HubPort}" TextAlignment="Center"/>
 									</Border>
-									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="1">
+									<Border Background="#EEEEEE" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="1">
 										<TextBlock Text="{Binding SensorType}" TextAlignment="Center"/>
 									</Border>
-									<Border Background="#A9C734" BorderBrush="Black" BorderThickness="1" Padding="5" Grid.Column="2">
+									<Border Background="#EEEEEE" BorderBrush="#778899" BorderThickness="1" Padding="5" Grid.Column="2">
 										<TextBlock Text="{Binding LiveData}" TextAlignment="Center"/>
 									</Border>
 								</Grid>
