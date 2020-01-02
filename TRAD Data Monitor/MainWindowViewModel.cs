@@ -19,7 +19,7 @@ using System.Diagnostics;
 
 namespace TRADDataMonitor
 {
-    public class MainConfigViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         #region variables
 
@@ -492,7 +492,7 @@ namespace TRADDataMonitor
         #endregion
 
         #region methods
-        public MainConfigViewModel(MainWindow mw)
+        public MainWindowViewModel(MainWindow mw)
         {
             LoadConfiguration();
         }
@@ -905,9 +905,10 @@ namespace TRADDataMonitor
             }
         }
 
-        public void ViewDatabase()
+        public void ViewData()
         {
-            
+            DataWindow dw = new DataWindow();
+            dw.Show();
         }
 
         // Timer tick event

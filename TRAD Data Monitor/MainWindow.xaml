@@ -279,7 +279,7 @@
 							</DataTemplate>
 						</ListBox.ItemTemplate>
 					</ListBox>
-					<Button Content="View All Data" Grid.Row="6" Grid.ColumnSpan="3" Command="{Binding $parent[Window].DataContext.ViewDatabase}" Margin="10 2"/>
+					<Button Content="View Graphs" Grid.Row="6" Grid.ColumnSpan="3" Command="{Binding $parent[Window].DataContext.ViewData}" Margin="10 2"/>
 				</Grid>
 			</Border>
 		</Grid>

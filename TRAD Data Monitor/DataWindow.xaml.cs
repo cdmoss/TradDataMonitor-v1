@@ -4,12 +4,11 @@ using Avalonia.Markup.Xaml;
 
 namespace TRADDataMonitor
 {
-    public class MainWindow : Window
+    public class DataWindow : Window
     {
-        public MainWindow()
+        public DataWindow()
         {
-            InitializeComponent();
-            this.DataContext = new MainWindowViewModel(this);
+            this.InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
