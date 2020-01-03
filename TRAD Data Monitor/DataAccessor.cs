@@ -527,7 +527,37 @@ namespace TRADDataMonitor
             {
                 _tradDBConn.Close();
             }
+        }
 
+        public DataTable GetSensorData(List<string> sensorTypes)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                foreach (string sensorType in sensorTypes)
+                {
+                    DataTable currentDT = new DataTable();
+                    string query = $@"select * from SensorData 
+                                    where SensorType like '%{sensorType}%'";
+                    _tradDBConn.Open();
+
+                    using (SQLiteDataAdapter adp = new SQLiteDataAdapter(query, _tradDBConn))
+                    {
+                        adp.Fill(currentDT);
+                    }
+
+                    dt.Merge(currentDT);
+
+                    _tradDBConn.Close();
+                }
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

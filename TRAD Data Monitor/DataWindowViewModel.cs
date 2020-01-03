@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -113,7 +114,15 @@ namespace TRADDataMonitor
 
         public DataWindowViewModel()
         {
+            _data = new DataAccessor();
+            selectedSensors = new List<string>();
 
+            selectedSensors.Add("Moisture");
+            selectedSensors.Add("Humidity");
+
+            DataTable dt = _data.GetSensorData(selectedSensors);
+
+            DataTableToCSV(dt);
         }
 
         void CreateGraph(params string[] sensorTypes)
@@ -121,9 +130,7 @@ namespace TRADDataMonitor
             REngine.SetEnvironmentVariables();
             REngine engine = REngine.GetInstance();
             engine.Initialize();
-            string fileName = "data.csv"
-                
-                ;
+            string fileName = "data.csv";
 
             CharacterVector fileNameVector = engine.CreateCharacterVector(new[] { fileName });
             engine.SetSymbol("fileName", fileNameVector);

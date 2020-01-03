@@ -259,3 +259,5 @@ C:\Users\chase.mossing2\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\ne
 C:\Users\chase.mossing2\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.csproj.CopyComplete
 C:\Users\chase.mossing2\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.dll
 C:\Users\chase.mossing2\Desktop\Trad-Data-Monitor\TRAD Data Monitor\obj\Debug\netcoreapp3.0\TRADDataMonitor.pdb
+C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\DynamicInterop.dll
+C:\Users\cheze\Desktop\Trad-Data-Monitor\TRAD Data Monitor\bin\Debug\netcoreapp3.0\RDotNet.dll
