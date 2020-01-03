@@ -22,12 +22,15 @@ namespace TRADDataMonitor.SensorTypes
             humidityDevice.HubPort = hubPort;
             humidityDevice.IsHubPortDevice = false;
             humidityDevice.HumidityChange += Device_HumidityChange;
+            this.minHumThreshold = minHumThreshold;
+            this.maxHumThreshold = maxHumThreshold;
 
             temperatureDevice = new TemperatureSensor();
             temperatureDevice.HubPort = hubPort;       
-
             temperatureDevice.IsHubPortDevice = false;          
             temperatureDevice.TemperatureChange += TemperatureDevice_TemperatureChange;
+            this.minAirThreshold = maxAirThreshold;
+            this.maxAirThreshold = maxAirThreshold;
 
             _temperatureAlerts = new Timer(600000);
             _temperatureAlerts.AutoReset = true;

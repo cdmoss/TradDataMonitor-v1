@@ -1,51 +1,52 @@
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Animation.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Base.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Controls.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.DesignerSupport.dll
-C:\Users\cheze\.nuget\packages\avalonia.desktop\0.9.1\lib\netstandard2.0\Avalonia.Desktop.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.DesktopRuntime.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Diagnostics.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Dialogs.dll
-C:\Users\cheze\.nuget\packages\avalonia.direct2d1\0.9.1\lib\netstandard2.0\Avalonia.Direct2D1.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.dll
-C:\Users\cheze\.nuget\packages\avalonia.freedesktop\0.9.1\lib\netstandard2.0\Avalonia.FreeDesktop.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Input.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Interactivity.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Layout.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Logging.Serilog.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Markup.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Markup.Xaml.dll
-C:\Users\cheze\.nuget\packages\avalonia.native\0.9.1\lib\netstandard2.0\Avalonia.Native.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.OpenGL.dll
-C:\Users\cheze\.nuget\packages\avalonia.remote.protocol\0.9.1\lib\netstandard2.0\Avalonia.Remote.Protocol.dll
-C:\Users\cheze\.nuget\packages\avalonia.skia\0.9.1\lib\netstandard2.0\Avalonia.Skia.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Styling.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Themes.Default.dll
-C:\Users\cheze\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Visuals.dll
-C:\Users\cheze\.nuget\packages\avalonia.win32\0.9.1\lib\netstandard2.0\Avalonia.Win32.dll
-C:\Users\cheze\.nuget\packages\avalonia.x11\0.9.1\lib\netstandard2.0\Avalonia.X11.dll
-C:\Users\cheze\.nuget\packages\portable.bouncycastle\1.8.5\lib\netstandard2.0\BouncyCastle.Crypto.dll
-C:\Users\cheze\.nuget\packages\htmlagilitypack\1.11.17\lib\netstandard2.0\HtmlAgilityPack.dll
-C:\Users\cheze\.nuget\packages\jetbrains.annotations\10.3.0\lib\netstandard1.0\JetBrains.Annotations.dll
-C:\Users\cheze\.nuget\packages\mailkit\2.4.1\lib\netstandard2.0\MailKit.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Animation.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Base.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Controls.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.DesignerSupport.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.desktop\0.9.1\lib\netstandard2.0\Avalonia.Desktop.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.DesktopRuntime.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Diagnostics.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Dialogs.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.direct2d1\0.9.1\lib\netstandard2.0\Avalonia.Direct2D1.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.freedesktop\0.9.1\lib\netstandard2.0\Avalonia.FreeDesktop.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Input.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Interactivity.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Layout.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Logging.Serilog.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Markup.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Markup.Xaml.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.native\0.9.1\lib\netstandard2.0\Avalonia.Native.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.OpenGL.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.remote.protocol\0.9.1\lib\netstandard2.0\Avalonia.Remote.Protocol.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.skia\0.9.1\lib\netstandard2.0\Avalonia.Skia.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Styling.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Themes.Default.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia\0.9.1\lib\netcoreapp2.0\Avalonia.Visuals.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.win32\0.9.1\lib\netstandard2.0\Avalonia.Win32.dll
+C:\Users\dylan.seitz\.nuget\packages\avalonia.x11\0.9.1\lib\netstandard2.0\Avalonia.X11.dll
+C:\Users\dylan.seitz\.nuget\packages\portable.bouncycastle\1.8.5\lib\netstandard2.0\BouncyCastle.Crypto.dll
+C:\Users\dylan.seitz\.nuget\packages\eagetmail\5.0.0.3\lib\netcoreapp2.1\EAGetMail.dll
+C:\Users\dylan.seitz\.nuget\packages\htmlagilitypack\1.11.17\lib\netstandard2.0\HtmlAgilityPack.dll
+C:\Users\dylan.seitz\.nuget\packages\jetbrains.annotations\10.3.0\lib\netstandard1.0\JetBrains.Annotations.dll
+C:\Users\dylan.seitz\.nuget\packages\mailkit\2.4.1\lib\netstandard2.0\MailKit.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.CSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.VisualBasic.Core.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.VisualBasic.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\Microsoft.Win32.Primitives.dll
-C:\Users\cheze\.nuget\packages\mimekit\2.4.1\lib\netstandard2.0\MimeKit.dll
+C:\Users\dylan.seitz\.nuget\packages\mimekit\2.4.1\lib\netstandard2.0\MimeKit.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\mscorlib.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\netstandard.dll
-C:\Users\cheze\.nuget\packages\phidget22.net\1.5.20191113\lib\netcoreapp2.0\Phidget22.NET.dll
-C:\Users\cheze\.nuget\packages\serilog\2.5.0\lib\netstandard1.3\Serilog.dll
-C:\Users\cheze\.nuget\packages\serilog.sinks.debug\1.0.0\lib\netstandard1.0\Serilog.Sinks.Debug.dll
-C:\Users\cheze\.nuget\packages\serilog.sinks.trace\2.1.0\lib\netstandard1.3\Serilog.Sinks.Trace.dll
-C:\Users\cheze\.nuget\packages\sharpdx.direct2d1\4.0.1\lib\netcoreapp1.0\SharpDX.Direct2D1.dll
-C:\Users\cheze\.nuget\packages\sharpdx.direct3d11\4.0.1\lib\netcoreapp1.0\SharpDX.Direct3D11.dll
-C:\Users\cheze\.nuget\packages\sharpdx\4.0.1\lib\netcoreapp1.0\SharpDX.dll
-C:\Users\cheze\.nuget\packages\sharpdx.dxgi\4.0.1\lib\netcoreapp1.0\SharpDX.DXGI.dll
-C:\Users\cheze\.nuget\packages\sharpgen.runtime.com\1.1.0\lib\netstandard1.1\SharpGen.Runtime.COM.dll
-C:\Users\cheze\.nuget\packages\sharpgen.runtime\1.1.0\lib\netstandard2.0\SharpGen.Runtime.dll
-C:\Users\cheze\.nuget\packages\skiasharp\1.68.0\lib\netstandard1.3\SkiaSharp.dll
+C:\Users\dylan.seitz\.nuget\packages\phidget22.net\1.5.20191113\lib\netcoreapp2.0\Phidget22.NET.dll
+C:\Users\dylan.seitz\.nuget\packages\serilog\2.5.0\lib\netstandard1.3\Serilog.dll
+C:\Users\dylan.seitz\.nuget\packages\serilog.sinks.debug\1.0.0\lib\netstandard1.0\Serilog.Sinks.Debug.dll
+C:\Users\dylan.seitz\.nuget\packages\serilog.sinks.trace\2.1.0\lib\netstandard1.3\Serilog.Sinks.Trace.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpdx.direct2d1\4.0.1\lib\netcoreapp1.0\SharpDX.Direct2D1.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpdx.direct3d11\4.0.1\lib\netcoreapp1.0\SharpDX.Direct3D11.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpdx\4.0.1\lib\netcoreapp1.0\SharpDX.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpdx.dxgi\4.0.1\lib\netcoreapp1.0\SharpDX.DXGI.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpgen.runtime.com\1.1.0\lib\netstandard1.1\SharpGen.Runtime.COM.dll
+C:\Users\dylan.seitz\.nuget\packages\sharpgen.runtime\1.1.0\lib\netstandard2.0\SharpGen.Runtime.dll
+C:\Users\dylan.seitz\.nuget\packages\skiasharp\1.68.0\lib\netstandard1.3\SkiaSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.AppContext.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Buffers.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Collections.Concurrent.dll
@@ -65,7 +66,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Data.Common.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Data.DataSetExtensions.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Data.dll
-C:\Users\cheze\.nuget\packages\system.data.sqlite.core\1.0.112\lib\netstandard2.0\System.Data.SQLite.dll
+C:\Users\dylan.seitz\.nuget\packages\system.data.sqlite.core\1.0.112\lib\netstandard2.0\System.Data.SQLite.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Diagnostics.Contracts.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Diagnostics.Debug.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Diagnostics.DiagnosticSource.dll
@@ -77,7 +78,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Diagnostics.TraceSource.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Diagnostics.Tracing.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.dll
-C:\Users\cheze\.nuget\packages\system.drawing.common\4.5.0\ref\netstandard2.0\System.Drawing.Common.dll
+C:\Users\dylan.seitz\.nuget\packages\system.drawing.common\4.5.0\ref\netstandard2.0\System.Drawing.Common.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Drawing.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Drawing.Primitives.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Dynamic.Runtime.dll
@@ -122,7 +123,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Numerics.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Numerics.Vectors.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.ObjectModel.dll
-C:\Users\cheze\.nuget\packages\system.reactive\4.1.6\lib\netstandard2.0\System.Reactive.dll
+C:\Users\dylan.seitz\.nuget\packages\system.reactive\4.1.6\lib\netstandard2.0\System.Reactive.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Reflection.DispatchProxy.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Reflection.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Reflection.Emit.dll
@@ -159,7 +160,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Security.Cryptography.X509Certificates.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Security.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Security.Principal.dll
-C:\Users\cheze\.nuget\packages\system.security.principal.windows\4.5.0\ref\netstandard2.0\System.Security.Principal.Windows.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.principal.windows\4.5.0\ref\netstandard2.0\System.Security.Principal.Windows.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Security.SecureString.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.ServiceModel.Web.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.ServiceProcess.dll
@@ -194,6 +195,6 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XmlSerializer.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XPath.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\System.Xml.XPath.XDocument.dll
-C:\Users\cheze\.nuget\packages\system.xml.xpath.xmldocument\4.3.0\ref\netstandard1.3\System.Xml.XPath.XmlDocument.dll
-C:\Users\cheze\.nuget\packages\tmds.dbus\0.7.0\lib\netstandard2.0\Tmds.DBus.dll
+C:\Users\dylan.seitz\.nuget\packages\system.xml.xpath.xmldocument\4.3.0\ref\netstandard1.3\System.Xml.XPath.XmlDocument.dll
+C:\Users\dylan.seitz\.nuget\packages\tmds.dbus\0.7.0\lib\netstandard2.0\Tmds.DBus.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.0.0\ref\netcoreapp3.0\WindowsBase.dll

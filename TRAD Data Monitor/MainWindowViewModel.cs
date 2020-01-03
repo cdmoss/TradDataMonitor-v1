@@ -12,10 +12,14 @@ using TRADDataMonitor.SensorTypes;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Timers;
-using MimeKit;
-using MailKit;
 using Phidget22;
 using System.Diagnostics;
+using MailKit;
+using MimeKit;
+using EAGetMail;
+using MailKit.Net.Imap;
+using System.Threading;
+using MailKit.Search;
 
 namespace TRADDataMonitor
 {
@@ -41,7 +45,7 @@ namespace TRADDataMonitor
         // data collection variables
         MyGpsSensor _gps;
         AirQualitySensor _aqs;
-        Timer _dataCollectionTimer;
+        System.Timers.Timer _dataCollectionTimer;
         ItemsChangeObservableCollection<VintHub> _savedVintHubs;
         VintHub _selectedSessionHub;
         string _dataCollectionStatus = "Disabled: No data is being collected";
@@ -690,7 +694,7 @@ namespace TRADDataMonitor
                 HubPort5 = SelectedConfigHub.Sensor5.SensorType;
 
                 // Instantiates the data collection timer, sets the timer interval
-                _dataCollectionTimer = new Timer();
+                _dataCollectionTimer = new System.Timers.Timer();
                 _dataCollectionTimer.Interval = Convert.ToInt32(DataCollectionIntervalTime);
                 _dataCollectionTimer.Elapsed += Tmr_Elapsed;
 
@@ -699,10 +703,12 @@ namespace TRADDataMonitor
                 {
                     _gps = new MyGpsSensor(-1, "GPS", 5000);
                     _gps.thresholdBroken += SendEmailAlert;
+                    // _gps.checkReplies += RetrieveEmailReply;
                 }
 
                 AQS = new AirQualitySensor(_minVOC, _maxVOC, _minCO2, _minCO2);
                 AQS.thresholdBroken += SendEmailAlert;
+                // AQS.checkReplies += RetrieveEmailReply;
             }
             else
             {
@@ -743,7 +749,7 @@ namespace TRADDataMonitor
             SelectedConfigHub = _unsavedVintHubs[0];
         }
 
-        // method that sends an email
+        // Function that sends an email alert for the phidget sensors
         public void SendEmailAlert(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, string emailType)
         {
             string subject;
@@ -756,12 +762,12 @@ namespace TRADDataMonitor
             }
             else if (emailType == "broken")
             {
-                subject = "THRESHOLD BROKEN ALERT";
+                subject = $"{sensor} THRESHOLD BROKEN";
                 message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
             }
             else
             {
-                subject = "THRESHOLD FIXED ALERT";
+                subject = $"{sensor} THRESHOLD FIXED";
                 message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
             }
 
@@ -775,7 +781,7 @@ namespace TRADDataMonitor
             smtp01.Send(msg);
         }
 
-        // Overloaded email method for VOC and CO2
+        // Overloaded email function for VOC and CO2 sensors
         public void SendEmailAlert(double minThresh, double maxThresh, string sensor, double val, string emailType)
         {
             string subject;
@@ -783,12 +789,12 @@ namespace TRADDataMonitor
 
             if (emailType == "fixed")
             {
-                subject = "THRESHOLD BROKEN ALERT";
+                subject = $"{sensor} THRESHOLD BROKEN";
                 message = $"ALERT: Data from the {sensor} sensor exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
             }
             else
             {
-                subject = "THRESHOLD FIXED ALERT";
+                subject = $"{sensor} THRESHOLD BROKEN";
                 message = $"ALERT: Data from the {sensor} sensor re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
             }
 
@@ -802,7 +808,7 @@ namespace TRADDataMonitor
             smtp01.Send(msg);
         }
 
-        // Overloaded email method for GPS
+        // Overloaded email function for GPS sensor
         public void SendEmailAlert(double distanceThreshold, string sensor, double lat, double lng, double val)
         {
             string subject;
@@ -820,10 +826,59 @@ namespace TRADDataMonitor
             MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
             smtp01.Send(msg);
         }
-        
+
+        // Function for retrieving email replies to the alerts (code from: https://stackoverflow.com/questions/545724/using-c-sharp-net-libraries-to-check-for-imap-messages-from-gmail-servers)
+        public string RetrieveEmailReply(DateTime alertSent, string alertSubject)
+        {
+            try
+            {
+                string ret = "";
+
+                using (var client = new ImapClient())
+                {
+                    using (var cancel = new CancellationTokenSource())
+                    {
+                        client.Connect("imap.gmail.com", 993, true, cancel.Token);
+
+                        client.Authenticate(this.SenderEmailAddress, this.SenderEmailPassword, cancel.Token);
+
+                        var inbox = client.Inbox;
+                        inbox.Open(FolderAccess.ReadOnly, cancel.Token);
+
+                        // download each message based on the message index
+                        for (int i = 0; i < inbox.Count; i++)
+                        {
+                            var message = inbox.GetMessage(i, cancel.Token);
+                            Console.WriteLine("Subject: {0}", message.Subject);
+                        }
+
+                        // search for the reply 
+                        var query = SearchQuery.DeliveredAfter(alertSent)
+                            .And(SearchQuery.SubjectContains(alertSubject));
+
+                        foreach (var uid in inbox.Search(query, cancel.Token))
+                        {
+                            var message = inbox.GetMessage(uid, cancel.Token);
+                            ret = message.Body.ToString();
+                        }
+
+                        client.Disconnect(true, cancel.Token);
+
+                        return ret;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string exception = ex.Message;
+                throw;
+            }
+        }
+
+        // Calls the send email alert function with test parameters
         public void SendTestEmailAlert()
         {
-            SendEmailAlert(-1, -1, "testHub", "testSesnor", -1, -1, "test");
+            SendEmailAlert(-1, -1, "testHub", "testSensor", -1, -1, "test");
         }
 
         public void StartDataCollection()
@@ -848,6 +903,7 @@ namespace TRADDataMonitor
                         {
                             sensor.OpenConnection();
                             sensor.thresholdBroken += SendEmailAlert;
+                            sensor.checkReplies += RetrieveEmailReply;
                         }
                     }
 

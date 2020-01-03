@@ -12,7 +12,6 @@ namespace TRADDataMonitor.SensorTypes
         VoltageInput device;
         public DateTime lastTimestamp;
         private double lastVoltage;
-        private bool insertRecord = true;
 
         public MyOxygenSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
