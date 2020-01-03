@@ -679,7 +679,13 @@ namespace TRADDataMonitor
 
                 // load saved vint hubs
                 SavedVintHubs = _data.VintHubs;
-                UnsavedVintHubs = SavedVintHubs;
+
+                UnsavedVintHubs = new ItemsChangeObservableCollection<VintHub>();
+
+                foreach (VintHub hub in SavedVintHubs)
+                {
+                    UnsavedVintHubs.Add(hub);
+                }
 
                 SelectedConfigHub = _unsavedVintHubs[0];
                 HubPort0 = SelectedConfigHub.Sensor0.SensorType;

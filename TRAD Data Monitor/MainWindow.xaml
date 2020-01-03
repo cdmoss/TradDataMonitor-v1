@@ -259,7 +259,7 @@
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
-					<ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" Margin="10 2">
+                    <ListBox Items="{Binding SavedVintHubs}" SelectedItem="{Binding SelectedSessionHub}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" Margin="10 2">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<Grid>
