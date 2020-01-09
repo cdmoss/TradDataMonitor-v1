@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -17,29 +18,52 @@ namespace TRADDataMonitor
         DataAccessor _data;
 
         string _selectedSensor;
+        Bitmap _graph;
 
         public string SelectedSensor
         {
             get { return _selectedSensor; }
-            set { _selectedSensor = value; }
+            set 
+            {
+                _selectedSensor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Bitmap Graph
+        {
+            get { return _graph; }
+            set 
+            {
+                _graph = value;
+                OnPropertyChanged();
+            }
         }
 
 
         public DataWindowViewModel()
         {
             _data = new DataAccessor();
-
         }
 
-        void CreateGraph(params string[] sensorTypes)
+        void CreateGraph(string sensorTypes)
         {
-            REngine.SetEnvironmentVariables();
-            REngine engine = REngine.GetInstance();
-            engine.Initialize();
-            string fileName = "data.csv";
+            try
+            {
+                DataTableToCSV(_data.GetSensorData("Moisture"));
 
-            CharacterVector fileNameVector = engine.CreateCharacterVector(new[] { fileName });
-            engine.SetSymbol("fileName", fileNameVector);
+                Process proc = new Process();
+                proc.StartInfo.FileName = "C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\chart.bat";
+                proc.StartInfo.CreateNoWindow = true;
+                proc.Start();
+                proc.WaitForExit();
+
+                Graph = new Bitmap("C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\graph.png");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         // Taken From https://stackoverflow.com/questions/4959722/c-sharp-datatable-to-csv
@@ -57,7 +81,7 @@ namespace TRADDataMonitor
                 sb.AppendLine(string.Join(",", fields));
             }
 
-            File.WriteAllText("data.csv", sb.ToString());
+            File.WriteAllText("C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\data.csv", sb.ToString());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
