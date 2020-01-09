@@ -16,113 +16,19 @@ namespace TRADDataMonitor
     {
         DataAccessor _data;
 
-        bool _moisture, _humidity, _soilTemp, _airTemp, _oxygen, _voc, _co2;
-        List<string> selectedSensors;
+        string _selectedSensor;
 
-        public bool Moisture
+        public string SelectedSensor
         {
-            get { return _moisture; }
-            set 
-            { 
-                _moisture = value;
-                if (value)
-                    selectedSensors.Add("Moisture");
-                OnPropertyChanged();
-            }
+            get { return _selectedSensor; }
+            set { _selectedSensor = value; }
         }
 
-        public bool Humidity
-        {
-            get { return _moisture; }
-            set
-            {
-                _moisture = value;
-                if (value)
-                    selectedSensors.Add("Humidity");
-                OnPropertyChanged();
-            }
-        }
-
-        public bool SoilTemperature
-        {
-            get { return _soilTemp; }
-            set
-            {
-                _soilTemp = value;
-                if (value)
-                    selectedSensors.Add("Soil Temperature");
-                else
-                    selectedSensors.Remove("Soil Temperature");
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool AirTemperautre
-        {
-            get { return _airTemp; }
-            set
-            {
-                _airTemp = value;
-                if (value)
-                    selectedSensors.Add("Air Temperature");
-                else
-                    selectedSensors.Remove("Air Temperature");
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool Oxygen
-        {
-            get { return _oxygen; }
-            set
-            {
-                _oxygen = value;
-                if (value)
-                    selectedSensors.Add("Oxygen");
-                else
-                    selectedSensors.Remove("Oxygen");
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool VOC
-        {
-            get { return _voc; }
-            set
-            {
-                _voc = value;
-                if (value)
-                    selectedSensors.Add("VOC");
-                OnPropertyChanged();
-            }
-        }
-
-        public bool CO2
-        {
-            get { return _co2; }
-            set
-            {
-                _co2 = value;
-                if (value)
-                    selectedSensors.Add("CO2");
-                OnPropertyChanged();
-            }
-        }
 
         public DataWindowViewModel()
         {
             _data = new DataAccessor();
-            selectedSensors = new List<string>();
 
-            selectedSensors.Add("Moisture");
-            selectedSensors.Add("Humidity");
-
-            DataTable dt = _data.GetSensorData(selectedSensors);
-
-            DataTableToCSV(dt);
         }
 
         void CreateGraph(params string[] sensorTypes)

@@ -1,7 +1,7 @@
 library(tidyverse)
 library(lubridate)
 
-df = read_csv("data.csv")
+df = read_csv("C:/Users/chase.mossing2/Desktop/data.csv")
 
 p = df %>% 
   ggplot(aes(x=as.POSIXct(ymd_hms(DateTime)), 
@@ -14,6 +14,6 @@ p = df %>%
   labs(y = "Sensor Data") + 
   labs(color = "Sensor Type")
 
-png(filename = "graph.png", width = 640, height = 480)
+png(filename = "C:/Users/chase.mossing2/Desktop/graph.png", width = 640, height = 480)
 p
 dev.off()

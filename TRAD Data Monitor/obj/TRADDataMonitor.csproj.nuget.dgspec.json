@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {}
+    "Z:\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {
+    "Z:\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectUniqueName": "Z:\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
         "projectName": "TRADDataMonitor",
-        "projectPath": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectPath": "Z:\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
         "packagesPath": "C:\\Users\\chase.mossing2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\obj\\",
+        "outputPath": "Z:\\Trad-Data-Monitor\\TRAD Data Monitor\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
