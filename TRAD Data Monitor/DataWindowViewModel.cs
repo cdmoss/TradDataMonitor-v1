@@ -20,6 +20,8 @@ namespace TRADDataMonitor
         string _selectedSensor;
         Bitmap _graph;
 
+        public string[] SensorTypes { get; set; } = { "Moisture", "Humidity", "Air Temperature", "Soil Temperature", "Oxygen", "None" };
+
         public string SelectedSensor
         {
             get { return _selectedSensor; }
@@ -40,25 +42,25 @@ namespace TRADDataMonitor
             }
         }
 
-
         public DataWindowViewModel()
         {
             _data = new DataAccessor();
+            SelectedSensor = "None";
         }
 
         void CreateGraph(string sensorTypes)
         {
             try
             {
-                DataTableToCSV(_data.GetSensorData("Moisture"));
+                DataTableToCSV(_data.GetSensorData(SelectedSensor));
 
                 Process proc = new Process();
-                proc.StartInfo.FileName = "C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\chart.bat";
+                proc.StartInfo.FileName = "C:\\Users\\cheze\\Desktop\\TradPackage\\chart.bat";
                 proc.StartInfo.CreateNoWindow = true;
                 proc.Start();
                 proc.WaitForExit();
 
-                Graph = new Bitmap("C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\graph.png");
+                Graph = new Bitmap("C:\\Users\\cheze\\Desktop\\TradPackage\\graph.png");
             }
             catch (Exception ex)
             {
@@ -81,7 +83,7 @@ namespace TRADDataMonitor
                 sb.AppendLine(string.Join(",", fields));
             }
 
-            File.WriteAllText("C:\\Users\\chase.mossing2\\Desktop\\TradPackage\\data.csv", sb.ToString());
+            File.WriteAllText("C:\\Users\\cheze\\Desktop\\TradPackage\\data.csv", sb.ToString());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

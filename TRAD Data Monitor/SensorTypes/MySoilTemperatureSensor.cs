@@ -75,7 +75,7 @@ namespace TRADDataMonitor.SensorTypes
         {
             string[] ret = new string[3];
             ret[0] = lastTimestamp.ToString();
-            ret[1] = "Temperature (°C)";
+            ret[1] = "Soil Temperature (°C)";
             ret[2] = LiveData;
             return ret;
         }
