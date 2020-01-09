@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29521.150
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRADDataMonitor", "TRAD Data Monitor\TRADDataMonitor.csproj", "{37D54BB9-9F76-4591-9BBF-0BDFE3A854A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRADDataMonitor", "TRADDataMonitor\TRADDataMonitor.csproj", "{37D54BB9-9F76-4591-9BBF-0BDFE3A854A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
