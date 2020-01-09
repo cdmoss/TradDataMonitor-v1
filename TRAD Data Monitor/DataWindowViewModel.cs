@@ -20,7 +20,7 @@ namespace TRADDataMonitor
         string _selectedSensor;
         Bitmap _graph;
 
-        public string[] SensorTypes { get; set; } = { "Moisture", "Humidity", "Air Temperature", "Soil Temperature", "Oxygen", "None" };
+        public string[] SensorTypes { get; set; } = { "Moisture", "Humidity", "Air Temperature", "Soil Temperature", "Light", "Oxygen", "None"};
 
         public string SelectedSensor
         {
