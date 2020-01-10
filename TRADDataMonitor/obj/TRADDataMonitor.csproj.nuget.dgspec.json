@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {}
+    "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj": {
+    "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectUniqueName": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
         "projectName": "TRADDataMonitor",
-        "projectPath": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\TRADDataMonitor.csproj",
+        "projectPath": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
         "packagesPath": "C:\\Users\\cheze\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cheze\\Desktop\\Trad-Data-Monitor\\TRAD Data Monitor\\obj\\",
+        "outputPath": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

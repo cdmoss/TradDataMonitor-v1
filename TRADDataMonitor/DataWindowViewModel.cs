@@ -62,7 +62,7 @@ namespace TRADDataMonitor
 
                 Graph = new Bitmap("C:\\Users\\cheze\\Desktop\\TradPackage\\graph.png");
             }
-            catch (Exception ex)
+            catch //(Exception ex)
             {
                 throw;
             }

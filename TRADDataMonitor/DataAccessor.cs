@@ -115,7 +115,7 @@ namespace TRADDataMonitor
             string result = "";
             string getGeneralConfigQuery = $@"select * from GeneralConfig";
             string getVintConfig = "select * from VintHubConfig";
-            string getExtensionConfig = "select * from ExtensionHubConfig";
+            // string getExtensionConfig = "select * from ExtensionHubConfig";
 
             if (CheckForConfig())
             {
@@ -547,7 +547,7 @@ namespace TRADDataMonitor
 
                 return dt;
             }
-            catch (Exception ex)
+            catch //(Exception ex)
             {
 
                 throw;

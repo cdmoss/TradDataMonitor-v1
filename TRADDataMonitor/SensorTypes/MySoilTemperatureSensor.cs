@@ -10,9 +10,9 @@ namespace TRADDataMonitor.SensorTypes
     public class MySoilTemperatureSensor : PhidgetSensor
     {
         TemperatureSensor device;
-        DateTime lastTimestamp;
+        DateTime lastTimestamp, lastThresholdBrokenDate;
         double lastSoilTemperature;
-        public bool insertRecord = false;
+        private bool emailTimerOnCooldown = false;
 
 
         public MySoilTemperatureSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
@@ -54,8 +54,9 @@ namespace TRADDataMonitor.SensorTypes
             lastTimestamp = DateTime.Now;
             LiveData = lastSoilTemperature.ToString() + " °C";
 
-            if ((lastSoilTemperature < minThreshold || lastSoilTemperature > maxThreshold) && !_emailTimer.Enabled)
+            if ((lastSoilTemperature < minThreshold || lastSoilTemperature > maxThreshold) && !_emailTimer.Enabled && !emailTimerOnCooldown)
             {
+                lastThresholdBrokenDate = DateTime.Now;
                 thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature, "broken");
                 _emailTimer.Enabled = true;
             }
@@ -63,13 +64,33 @@ namespace TRADDataMonitor.SensorTypes
 
         public override void _emailTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature, "broken");
+            string replyMessage = checkReplies?.Invoke(lastThresholdBrokenDate, $"{SensorType} THRESHOLD BROKEN");
 
-            if (!(lastSoilTemperature < minThreshold || lastSoilTemperature > maxThreshold) && _emailTimer.Enabled)
+            if (replyMessage.Contains("OK") || replyMessage.Contains("Ok") || replyMessage.Contains("ok"))
             {
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature, "fixed");
+                _emailAlertCooldown.Enabled = true;
+                emailTimerOnCooldown = true;
                 _emailTimer.Enabled = false;
+
             }
+            else
+            {
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastSoilTemperature, "broken");
+            }
+
+            //if (!(lastVoltage < minThreshold || lastVoltage > maxThreshold))
+            //{
+            //    _emailTimer.Enabled = false;
+            //    thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "fixed");
+            //}
+        }
+
+        public override void _emailAlertCooldown_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // send a reply email
+
+            _emailAlertCooldown.Enabled = false;
+            emailTimerOnCooldown = false;
         }
         public override string[] ProduceData()
         {

@@ -9,12 +9,13 @@ namespace TRADDataMonitor.SensorTypes
 {
     public class MyHumidityAirTemperatureSensor : PhidgetSensor
     {
-        Timer _temperatureAlerts;
+        Timer _temperatureEmailTimer, _temperatureAlertCooldown;
         HumiditySensor humidityDevice;
         TemperatureSensor temperatureDevice;
         private double lastHumidity = -1, lastAirTemperature = -1;
-        private double minAirThreshold, maxAirThreshold, minHumThreshold, maxHumThreshold;
-        public DateTime lastTimestamp;
+        // private double minAirThreshold, maxAirThreshold, minHumThreshold, maxHumThreshold;
+        public DateTime lastTimestamp, lastHumidityThresholdBrokenDate, lastTemperatureThresholdBrokenDate;
+        private bool humidityEmailTimerOnCooldown = false, temperatureEmailTimerOnCooldown = false;
 
         public MyHumidityAirTemperatureSensor(int hubPort, string type, string hubName, double minHumThreshold, double maxHumThreshold, double minAirThreshold, double maxAirThreshold, bool wireless) : base(hubPort, type, hubName, minHumThreshold, maxHumThreshold, minAirThreshold, maxAirThreshold, wireless)
         {
@@ -29,9 +30,13 @@ namespace TRADDataMonitor.SensorTypes
             temperatureDevice.IsHubPortDevice = false;          
             temperatureDevice.TemperatureChange += TemperatureDevice_TemperatureChange;
 
-            _temperatureAlerts = new Timer(600000);
-            _temperatureAlerts.AutoReset = true;
-            _temperatureAlerts.Elapsed += _temperatureAlerts_Elapsed;
+            _temperatureEmailTimer = new Timer(180000);
+            _temperatureEmailTimer.AutoReset = true;
+            _temperatureEmailTimer.Elapsed += _temperatureAlerts_Elapsed;
+
+            _temperatureAlertCooldown = new Timer(3600000);
+            _temperatureAlertCooldown.AutoReset = true;
+            _temperatureAlertCooldown.Elapsed += _temperatureAlertCooldown_Elapsed;
         }
 
         public override void OpenConnection()
@@ -67,8 +72,9 @@ namespace TRADDataMonitor.SensorTypes
             lastTimestamp = DateTime.Now;
             LiveData = lastHumidity.ToString() + " %, " + lastAirTemperature.ToString() + " °C";
 
-            if ((lastHumidity < minThreshold || lastHumidity > maxThreshold) && !_emailTimer.Enabled) 
+            if ((lastHumidity < minThreshold || lastHumidity > maxThreshold) && !_emailTimer.Enabled && !humidityEmailTimerOnCooldown) 
             {
+                lastHumidityThresholdBrokenDate = DateTime.Now;
                 thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Humidity", hubPort, lastHumidity, "broken");
                 _emailTimer.Enabled = true;
             }     
@@ -79,33 +85,72 @@ namespace TRADDataMonitor.SensorTypes
             lastTimestamp = DateTime.Now;
             LiveData = lastHumidity.ToString() + " %, " + lastAirTemperature.ToString() + " °C";
 
-            if ((lastAirTemperature < secondMinThreshold || lastAirTemperature > secondMaxThreshold) && !_temperatureAlerts.Enabled)
+            if ((lastAirTemperature < secondMinThreshold || lastAirTemperature > secondMaxThreshold) && !_temperatureEmailTimer.Enabled && !temperatureEmailTimerOnCooldown)
             {
+                lastTemperatureThresholdBrokenDate = DateTime.Now;
                 thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Air Temperature", hubPort, lastAirTemperature, "broken");
-                _temperatureAlerts.Enabled = true;
+                _temperatureEmailTimer.Enabled = true;
             }
         }
 
         public override void _emailTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Humidity", hubPort, lastHumidity, "broken");
+            string replyMessage = checkReplies?.Invoke(lastHumidityThresholdBrokenDate, $"{SensorType} THRESHOLD BROKEN");
 
-            if (!(lastHumidity < minThreshold || lastHumidity > maxThreshold))
+            if (replyMessage.Contains("OK") || replyMessage.Contains("Ok") || replyMessage.Contains("ok"))
             {
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Humidity", hubPort, lastHumidity, "fixed");
+                _emailAlertCooldown.Enabled = true;
+                humidityEmailTimerOnCooldown = true;
                 _emailTimer.Enabled = false;
+
             }
+            else
+            {
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastHumidity, "broken");
+            }
+
+            //if (!(lastVoltage < minThreshold || lastVoltage > maxThreshold))
+            //{
+            //    _emailTimer.Enabled = false;
+            //    thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "fixed");
+            //}
         }
 
         private void _temperatureAlerts_Elapsed(object sender, ElapsedEventArgs e)
         {
-            thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Air Temperature", hubPort, lastAirTemperature, "broken");
+            string replyMessage = checkReplies?.Invoke(lastTemperatureThresholdBrokenDate, $"{SensorType} THRESHOLD BROKEN");
 
-            if (!(lastAirTemperature < secondMinThreshold || lastAirTemperature > secondMaxThreshold))
+            if (replyMessage.Contains("OK") || replyMessage.Contains("Ok") || replyMessage.Contains("ok"))
             {
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, "Humidity", hubPort, lastHumidity, "fixed");
-                _temperatureAlerts.Enabled = false;
+                _temperatureAlertCooldown.Enabled = true;
+                temperatureEmailTimerOnCooldown = true;
+                _temperatureEmailTimer.Enabled = false;
+
             }
+            else
+            {
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastAirTemperature, "broken");
+            }
+
+            //if (!(lastVoltage < minThreshold || lastVoltage > maxThreshold))
+            //{
+            //    _emailTimer.Enabled = false;
+            //    thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "fixed");
+            //}
+        }
+        public override void _emailAlertCooldown_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // send a reply email
+
+            _emailAlertCooldown.Enabled = false;
+            humidityEmailTimerOnCooldown = false;
+        }
+        public void _temperatureAlertCooldown_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // send a reply email
+
+            _temperatureAlertCooldown.Enabled = false;
+            temperatureEmailTimerOnCooldown = false;
         }
         public string[] ProduceHumidityData()
         {

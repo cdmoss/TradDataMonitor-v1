@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Avalonia.Media.Imaging;
+using Phidget22;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Avalonia.Media.Imaging;
-using System.IO;
-using System.Data.SQLite;
-using System.Net.Mail;
-using System.Net;
-using TRADDataMonitor.SensorTypes;
-using System.Collections.ObjectModel;
-using System.Net.Sockets;
 using System.Timers;
-using MimeKit;
-using MailKit;
-using Phidget22;
-using System.Diagnostics;
+using TRADDataMonitor.SensorTypes;
 
 namespace TRADDataMonitor
 {
@@ -26,6 +15,9 @@ namespace TRADDataMonitor
         // data access
         DataAccessor _data;
 
+        // email handler
+        EmailHandler _email;
+
         // config variables
 
         // port assignment for current vint hub
@@ -33,7 +25,7 @@ namespace TRADDataMonitor
 
         double _minSoilTemperature, _minAirTemperature, _minHumidity, _minMoisture, _minOxygen, _minVOC, _minCO2;
         double _maxSoilTemperature, _maxAirTemperature, _maxHumidity, _maxMoisture, _maxOxygen, _maxVOC, _maxCO2, _maxGpsDistance;
-        string _recepientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort, _dataCollectionIntervalTime;
+        string _recipientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort, _dataCollectionIntervalTime;
         bool _gpsEnabled = false;
         ItemsChangeObservableCollection<VintHub> _unsavedVintHubs;
         VintHub _selectedConfigHub;
@@ -330,12 +322,12 @@ namespace TRADDataMonitor
         #endregion
         public string RecipientEmailAddress
         {
-            get { return _recepientEmailAddress; }
+            get { return _recipientEmailAddress; }
             set
             {
-                if (value != _recepientEmailAddress)
+                if (value != _recipientEmailAddress)
                 {
-                    _recepientEmailAddress = value;
+                    _recipientEmailAddress = value;
                     OnPropertyChanged();
                 }
             }
@@ -368,7 +360,7 @@ namespace TRADDataMonitor
                     }
                 }
                 else
-                    MessageBox.Show(_mainWindow, "Only integer values are allowed for this field.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "Only integer values are allowed for this field.", "Invalid Input", MessageBox.MessageBoxButtons.Ok);
             }
         }
 
@@ -413,7 +405,7 @@ namespace TRADDataMonitor
                     }
                 }
                 else
-                    MessageBox.Show(_mainWindow, "Only integer values are allowed for this field.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "Only integer values are allowed for this field.", "Invalid Input", MessageBox.MessageBoxButtons.Ok);
             }
         }
 
@@ -492,49 +484,9 @@ namespace TRADDataMonitor
         #endregion
 
         #region methods
-        public MainWindowViewModel(MainWindow mw)
+        public MainWindowViewModel()
         {
             LoadConfiguration();
-        }
-
-        // Method to validate the email formatting (code from https://stackoverflow.com/questions/1365407/c-sharp-code-to-validate-email-address)
-        public bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        // Method to validate the SMTP address and port number(code from https://stackoverflow.com/questions/955431/how-to-validate-smtp-server)
-        public bool IsValidSmtp(string hostAddress, int portNumber)
-        {
-            bool valid = false;
-            try
-            {
-                TcpClient smtpTest = new TcpClient();
-                smtpTest.Connect(hostAddress, portNumber);
-                if (smtpTest.Connected)
-                {
-                    NetworkStream ns = smtpTest.GetStream();
-                    StreamReader sr = new StreamReader(ns);
-                    if (sr.ReadLine().Contains("220"))
-                    {
-                        valid = true;
-                    }
-                    smtpTest.Close();
-                }
-            }
-            catch
-            {
-
-            }
-            return valid;
         }
 
         void SaveConfiguration()
@@ -546,24 +498,24 @@ namespace TRADDataMonitor
                 int dataInterval;
 
                 // Checks if the recepient email is valid before saving
-                if (IsValidEmail(RecipientEmailAddress))
+                if (_email.IsValidEmail(RecipientEmailAddress))
                 {
                     _data.RecipientEmailAddress = RecipientEmailAddress;
                 }
                 else
                 {
-                    MessageBox.Show(_mainWindow, "The recipient email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "The recipient email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.Ok);
                     return;
                 }
 
                 // Checks if the sender email is valid before saving
-                if (IsValidEmail(SenderEmailAddress))
+                if (_email.IsValidEmail(SenderEmailAddress))
                 {
                     SenderEmailAddress = SenderEmailAddress;
                 }
                 else
                 {
-                    MessageBox.Show(_mainWindow, "The sender email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "The sender email address is invalid.", "Invalid Input", MessageBox.MessageBoxButtons.Ok);
                     return;
                 }
 
@@ -576,20 +528,20 @@ namespace TRADDataMonitor
                     smtpPort = Int32.Parse(SenderEmailSmtpPort);
 
                     // Checks if the SMTP address and port are valid
-                    if (IsValidSmtp(SenderEmailSmtpAddress, smtpPort))
+                    if (_email.IsValidSmtp(SenderEmailSmtpAddress, smtpPort))
                     {
                         _data.SenderEmailSmtpAddress = SenderEmailSmtpAddress;
                         _data.SenderEmailSmtpPort = smtpPort;
                     }
                     else
                     {
-                        MessageBox.Show(_mainWindow, "The sender SMTP address and/or port are invalid.", "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                        MessageBox.Show(_mainWindow, "The sender SMTP address and/or port are invalid.", "Invalid Input", MessageBox.MessageBoxButtons.Ok);
                         return;
                     }
                 }
                 catch (Exception smtpPortError)
                 {
-                    MessageBox.Show(_mainWindow, smtpPortError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, smtpPortError.Message, "Invalid Input", MessageBox.MessageBoxButtons.Ok);
                     return;
                 }
 
@@ -603,7 +555,7 @@ namespace TRADDataMonitor
                 }
                 catch (Exception dataIntervalError)
                 {
-                    MessageBox.Show(_mainWindow, dataIntervalError.Message, "Invalid Input", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, dataIntervalError.Message, "Invalid Input", MessageBox.MessageBoxButtons.Ok);
                     return;
                 }
                 #endregion
@@ -625,7 +577,7 @@ namespace TRADDataMonitor
                 _data.MaxOxygen = _maxOxygen;
                 _data.MinVOC = _minVOC;
                 _data.MaxVOC = _maxVOC;
-                _data.RecipientEmailAddress = _recepientEmailAddress;
+                _data.RecipientEmailAddress = _recipientEmailAddress;
                 _data.SenderEmailAddress = _senderEmailAddress;
                 _data.SenderEmailPassword = _senderEmailPassword;
                 _data.SenderEmailSmtpAddress = _senderEmailSmtpAddress;
@@ -633,24 +585,27 @@ namespace TRADDataMonitor
                 _data.DataCollectionIntervalTime = Convert.ToInt32(_dataCollectionIntervalTime);
                 _data.GpsEnabled = _gpsEnabled;
 
+                _email = new EmailHandler(_recipientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort);
+
                 if (_data.SaveConfiguration() == "good" && _data.LoadConfiguration() == "good")
                 {
                     LoadConfiguration();
 
-                    MessageBox.Show(_mainWindow, "Configuration was successfully saved and is now the current configuration.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, "Configuration was successfully saved and is now the current configuration.", "Configuration Save Result", MessageBox.MessageBoxButtons.Ok);
                 }
                 else
-                    MessageBox.Show(_mainWindow, $"Configuration was not saved properly. Please ensure all fields contain valid input and try again", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+                    MessageBox.Show(_mainWindow, $"Configuration was not saved properly. Please ensure all fields contain valid input and try again", "Configuration Save Result", MessageBox.MessageBoxButtons.Ok);
             }
             else
             {
-                MessageBox.Show(_mainWindow, $"Cannot save a configuration during a data collection session. Turn off data collection and retry.", "Configuration Save Result", MessageBox.MessageBoxButtons.YesNoCancel);
+                MessageBox.Show(_mainWindow, $"Cannot save a configuration during a data collection session. Turn off data collection and retry.", "Configuration Save Result", MessageBox.MessageBoxButtons.Ok);
             }
         }
 
         void LoadConfiguration()
         { 
             _data = new DataAccessor();
+            _email = new EmailHandler(_recipientEmailAddress, _senderEmailAddress, _senderEmailPassword, _senderEmailSmtpAddress, _senderEmailSmtpPort);
 
             if (_data.LoadConfiguration() == "good")
             {
@@ -704,11 +659,13 @@ namespace TRADDataMonitor
                 if (GpsEnabled)
                 {
                     _gps = new MyGpsSensor(-1, "GPS", 5000);
-                    _gps.thresholdBroken += SendEmailAlert;
+                    _gps.thresholdBroken += _email.SendEmailAlert;
+                    _gps.checkReplies += _email.RetrieveEmailReply;
                 }
 
                 AQS = new AirQualitySensor(_minVOC, _maxVOC, _minCO2, _minCO2);
-                AQS.thresholdBroken += SendEmailAlert;
+                AQS.thresholdBroken += _email.SendEmailAlert;
+                AQS.checkReplies += _email.RetrieveEmailReply;
             }
             else
             {
@@ -729,7 +686,7 @@ namespace TRADDataMonitor
                 HubPort4 = _sensorTypes[5];
                 HubPort5 = _sensorTypes[5];
 
-                MessageBox.Show(_mainWindow, "No valid configuration profile was detected. Default values will be displayed in this form", "No Configuration Found", MessageBox.MessageBoxButtons.YesNoCancel);
+                MessageBox.Show(_mainWindow, "No valid configuration profile was detected. Default values will be displayed in this form", "No Configuration Found", MessageBox.MessageBoxButtons.Ok);
             }
         }   
         public void CreateNewVintHub()
@@ -748,88 +705,10 @@ namespace TRADDataMonitor
             }
             SelectedConfigHub = _unsavedVintHubs[0];
         }
-
-        // method that sends an email
-        public void SendEmailAlert(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, string emailType)
-        {
-            string subject;
-            string message;
-
-            if(emailType == "test")
-            {
-                subject = "TEST ALERT";
-                message = $"ALERT: This is a test alert. If you are recieving this then the email alert system is configured correctly";
-            }
-            else if (emailType == "broken")
-            {
-                subject = "THRESHOLD BROKEN ALERT";
-                message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
-            }
-            else
-            {
-                subject = "THRESHOLD FIXED ALERT";
-                message = $"ALERT: Data from the {sensor} sensor connected to port {portID} on hub {hubName} re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
-            }
-
-            SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
-            NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
-
-            System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
-            smtp01.Credentials = netCred;
-            smtp01.EnableSsl = true;
-            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
-            smtp01.Send(msg);
-        }
-
-        // Overloaded email method for VOC and CO2
-        public void SendEmailAlert(double minThresh, double maxThresh, string sensor, double val, string emailType)
-        {
-            string subject;
-            string message;
-
-            if (emailType == "fixed")
-            {
-                subject = "THRESHOLD BROKEN ALERT";
-                message = $"ALERT: Data from the {sensor} sensor exited the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
-            }
-            else
-            {
-                subject = "THRESHOLD FIXED ALERT";
-                message = $"ALERT: Data from the {sensor} sensor re-entered the allowable range of {minThresh} to {maxThresh} with a value of {val}.";
-            }
-
-            SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
-            NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
-
-            System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
-            smtp01.Credentials = netCred;
-            smtp01.EnableSsl = true;
-            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
-            smtp01.Send(msg);
-        }
-
-        // Overloaded email method for GPS
-        public void SendEmailAlert(double distanceThreshold, string sensor, double lat, double lng, double val)
-        {
-            string subject;
-            string message;
-
-            subject = "THRESHOLD BROKEN ALERT";
-            message = $"ALERT: Data from the {sensor} sensor exited the allowable radius of {distanceThreshold} km with a value of {val} km. The current latitude and longitiude values are: {lat}, {lng}.";        
-
-            SmtpClient smtp01 = new SmtpClient(SenderEmailSmtpAddress, Convert.ToInt32(SenderEmailSmtpPort));
-            NetworkCredential netCred = new NetworkCredential(SenderEmailAddress, SenderEmailPassword);
-
-            System.Net.Mime.ContentType mimeType = new System.Net.Mime.ContentType("text/html");
-            smtp01.Credentials = netCred;
-            smtp01.EnableSsl = true;
-            MailMessage msg = new MailMessage(SenderEmailAddress, RecipientEmailAddress, subject, message);
-            smtp01.Send(msg);
-        }
         
         public void SendTestEmailAlert()
         {
-            SendEmailAlert(-1, -1, "testHub", "testSesnor", -1, -1, "test");
+            _email.SendEmailAlert(-1, -1, "testHub", "testSensor", -1, -1, "test");
         }
 
         public void StartDataCollection()
@@ -853,7 +732,8 @@ namespace TRADDataMonitor
                         foreach (var sensor in hub.AllSensors)
                         {
                             sensor.OpenConnection();
-                            sensor.thresholdBroken += SendEmailAlert;
+                            sensor.thresholdBroken += _email.SendEmailAlert;
+                            sensor.checkReplies += _email.RetrieveEmailReply;
                         }
                     }
 

@@ -9,7 +9,7 @@ namespace TRADDataMonitor
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel(this);
+            this.DataContext = new MainWindowViewModel();
 #if DEBUG
             this.AttachDevTools();
 #endif

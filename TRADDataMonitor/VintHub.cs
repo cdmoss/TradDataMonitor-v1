@@ -13,7 +13,7 @@ namespace TRADDataMonitor
         ItemsChangeObservableCollection<PhidgetSensor> _allSensors;
         bool _wireless;
         string _hubName;
-        string _wirelessString, _idString;
+        string _wirelessString; //, _idString;
         #region sensor properties
         public PhidgetSensor Sensor0
         {

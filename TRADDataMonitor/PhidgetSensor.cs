@@ -9,7 +9,8 @@ namespace TRADDataMonitor
 {
     public class PhidgetSensor : INotifyPropertyChanged
     {
-        protected Timer _emailTimer = new Timer(60000);
+        // 60,000 ms = 10 minutes
+        protected Timer _emailTimer = new Timer(180000), _emailAlertCooldown = new Timer(3600000);
         protected int hubPort = -1;
         protected double minThreshold = -1, maxThreshold = -1, secondMinThreshold = -1, secondMaxThreshold = -1;
         protected bool hubPortDevice = true, thresholdEnabled = false, wirelessEnabled;
@@ -50,6 +51,10 @@ namespace TRADDataMonitor
         public delegate void EmailAlertHandler(double minThresh, double maxThresh, string hubName, string sensor, int portID, double val, string alertType);
         public EmailAlertHandler thresholdBroken;
 
+        // Delegate for email reply
+        public delegate string EmailCheckReplies(DateTime alertSent, string alertSubject);
+        public EmailCheckReplies checkReplies;
+
         // Constructor for both a minimum threshold value and a maximimum threshold value
         public PhidgetSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless)
         {
@@ -69,6 +74,10 @@ namespace TRADDataMonitor
         public virtual void _emailTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             
+        }
+        public virtual void _emailAlertCooldown_Elapsed(object sender, ElapsedEventArgs e)
+        {
+
         }
 
         // Constructor for 2 minimum threshold values and 2 maximimum threshold values

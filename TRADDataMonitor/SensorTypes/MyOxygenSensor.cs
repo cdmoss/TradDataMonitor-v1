@@ -10,9 +10,9 @@ namespace TRADDataMonitor.SensorTypes
     public class MyOxygenSensor : PhidgetSensor
     {
         VoltageInput device;
-        public DateTime lastTimestamp;
+        public DateTime lastTimestamp, lastThresholdBrokenDate;
         private double lastVoltage;
-        private bool insertRecord = true;
+        private bool emailTimerOnCooldown = false;
 
         public MyOxygenSensor(int hubPort, string type, string hubName, double minThreshold, double maxThreshold, bool wireless) : base(hubPort, type, hubName, minThreshold, maxThreshold, wireless)
         {
@@ -53,8 +53,9 @@ namespace TRADDataMonitor.SensorTypes
             lastTimestamp = DateTime.Now;
             LiveData = lastVoltage.ToString() + " V";
 
-            if ((lastVoltage < minThreshold || lastVoltage > maxThreshold ) && !_emailTimer.Enabled)
+            if ((lastVoltage < minThreshold || lastVoltage > maxThreshold ) && !_emailTimer.Enabled && !emailTimerOnCooldown)
             {
+                lastThresholdBrokenDate = DateTime.Now;
                 thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "broken");
                 _emailTimer.Enabled = true;
             }
@@ -62,13 +63,33 @@ namespace TRADDataMonitor.SensorTypes
 
         public override void _emailTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "broken");
+            string replyMessage = checkReplies?.Invoke(lastThresholdBrokenDate, $"{SensorType} THRESHOLD BROKEN");
 
-            if (!(lastVoltage < minThreshold || lastVoltage > maxThreshold))
+            if (replyMessage.Contains("OK") || replyMessage.Contains("Ok") || replyMessage.Contains("ok"))
             {
-                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "fixed");
+                _emailAlertCooldown.Enabled = true;
+                emailTimerOnCooldown = true;
                 _emailTimer.Enabled = false;
+
             }
+            else
+            {
+                thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "broken");
+            }
+
+            //if (!(lastVoltage < minThreshold || lastVoltage > maxThreshold))
+            //{
+            //    _emailTimer.Enabled = false;
+            //    thresholdBroken?.Invoke(minThreshold, maxThreshold, hubName, SensorType, hubPort, lastVoltage, "fixed");
+            //}
+        }
+
+        public override void _emailAlertCooldown_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // send a reply email
+
+            _emailAlertCooldown.Enabled = false;
+            emailTimerOnCooldown = false;
         }
 
         public override String[] ProduceData()
