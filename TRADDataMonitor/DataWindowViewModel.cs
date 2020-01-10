@@ -54,15 +54,22 @@ namespace TRADDataMonitor
             {
                 DataTableToCSV(_data.GetSensorData(SelectedSensor));
 
-                Process proc = new Process();
-                proc.StartInfo.FileName = "C:\\Users\\cheze\\Desktop\\TradPackage\\chart.bat";
-                proc.StartInfo.CreateNoWindow = true;
-                proc.Start();
-                proc.WaitForExit();
+                using (Process proc = new Process())
+		{
+			proc.StartInfo.FileName = "sh";
+			proc.StartInfo.Arguments = "/home/pi/Trad-Data-Monitor/TradPackage/chart.sh";
+	                proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true
+        	        proc.Start();
+                	proc.WaitForExit();
+		}
+                
 
-                Graph = new Bitmap("C:\\Users\\cheze\\Desktop\\TradPackage\\graph.png");
+                Graph = new Bitmap("/home/pu/Trad-Data-Monitor/TradPackage/graph.png");
             }
-            catch //(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }

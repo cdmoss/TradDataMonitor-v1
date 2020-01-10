@@ -1,24 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {}
+    "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {
+    "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
+        "projectUniqueName": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
         "projectName": "TRADDataMonitor",
-        "projectPath": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
-        "packagesPath": "C:\\Users\\cheze\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cheze\\Desktop\\Trad Most Recent\\Trad-Data-Monitor\\TRADDataMonitor\\obj\\",
+        "projectPath": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRADDataMonitor\\TRADDataMonitor.csproj",
+        "packagesPath": "C:\\Users\\chase.mossing2\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\chase.mossing2\\Desktop\\Trad-Data-Monitor\\TRADDataMonitor\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\cheze\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\chase.mossing2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -89,7 +91,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
